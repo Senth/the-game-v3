@@ -1,2 +1,3 @@
-# the-game-v3
-Puzzle Hunt game
+# The Game v3
+
+A puzzle hunt game
