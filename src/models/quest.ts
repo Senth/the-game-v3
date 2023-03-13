@@ -1,17 +1,16 @@
-class Season {
+export interface Season {
   id: string
   date: Date
   title: string
   themes: QuestTheme[]
 }
 
-
-class QuestTheme {
+export interface QuestTheme {
   quests: Quest[]
   title: string
 }
 
-class Quest {
+export interface Quest {
   id: string
   title: string
   description: string
@@ -21,7 +20,7 @@ class Quest {
   hints: Hint[]
 }
 
-class Hint {
+export interface Hint {
   text: string
   pointDecrease: number
 }

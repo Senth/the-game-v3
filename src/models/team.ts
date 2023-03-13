@@ -1,4 +1,4 @@
-class Team {
+export interface Team {
   id: string
   name: string
   password: string
@@ -7,7 +7,7 @@ class Team {
   questIndex: number
 }
 
-class Guess {
+export interface Guess {
   teamId: string
   questId: string
   guess: string
