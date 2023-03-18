@@ -15,6 +15,7 @@ export const theme = {
     },
     text: {
       primary: '#c5c7d8',
+      header: '#bbdefb',
       error: '#FFA500',
     },
   },

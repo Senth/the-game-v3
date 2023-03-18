@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { LoginResponse, LoginTypes } from '@/models/response/login'
+import { LoginResponse, LoginTypes } from '@models/api/login'
 
 export default function LoginPage(): JSX.Element {
   const [team, setTeam] = useState('')
@@ -113,10 +113,6 @@ const InputLabel = styled.label`
 const Input = styled.input`
   width: 100%;
   margin-top: ${(props) => props.theme.spacing.tiny};
-  padding: ${(props) => props.theme.spacing.small};
-  border-radius: ${(props) => props.theme.spacing.small};
-  color: ${(props) => props.theme.colors.text.primary};
-  font-size: ${(props) => props.theme.font.size.body};
 `
 
 const Button = styled.button`

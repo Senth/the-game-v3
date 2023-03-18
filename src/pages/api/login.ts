@@ -1,58 +1,48 @@
 import UserRepo from '@repo/user'
 import TeamRepo from '@repo/team'
-import { LoginResponse, LoginTypes } from '@models/response/login'
+import { LoginResponse, LoginTypes } from '@models/api/login'
 import { IronSession } from 'iron-session'
-import { withIronSessionApiRoute } from 'iron-session/next'
-import config from '@/config'
+import { withSessionApi } from '@utils/session'
 
-export default withIronSessionApiRoute(
-  async function loginRoute(req, res) {
-    const { team, password } = JSON.parse(req.body)
+export default withSessionApi(async function loginRoute(req, res) {
+  const { team, password } = JSON.parse(req.body)
 
-    if (!team || !password) {
-      return res.status(400).json({ message: 'Missing team or password' })
-    }
-
-    const userStatus = tryLoginUser(team, password, req.session)
-    const teamStatus = tryLoginTeam(team, password, req.session)
-
-    let userStatusCode = 0
-    let teamStatusCode = 0
-
-    userStatus.then((status) => {
-      if (status === 200) {
-        const responseBody: LoginResponse = { type: LoginTypes.USER }
-        res.status(200).json(responseBody)
-      } else {
-        userStatusCode = status
-      }
-    })
-
-    teamStatus.then((status) => {
-      if (status === 200) {
-        const responseBody: LoginResponse = { type: LoginTypes.TEAM }
-        res.status(200).json(responseBody)
-      } else {
-        teamStatusCode = status
-      }
-    })
-
-    return Promise.all([userStatus, teamStatus]).then(() => {
-      if (userStatusCode === 401 && teamStatusCode === 401) {
-        res.status(401).json({ message: 'Invalid username or password' })
-      } else if (userStatusCode === 500 || teamStatusCode === 500) {
-        res.status(500).json({ message: 'Internal server error' })
-      }
-    })
-  },
-  {
-    cookieName: config.cookieName,
-    password: config.cookiePassword,
-    cookieOptions: {
-      secure: process.env.NODE_ENV === 'production',
-    },
+  if (!team || !password) {
+    return res.status(400).json({ message: 'Missing team or password' })
   }
-)
+
+  const userStatus = tryLoginUser(team, password, req.session)
+  const teamStatus = tryLoginTeam(team, password, req.session)
+
+  let userStatusCode = 0
+  let teamStatusCode = 0
+
+  userStatus.then((status) => {
+    if (status === 200) {
+      const responseBody: LoginResponse = { type: LoginTypes.USER }
+      res.status(200).json(responseBody)
+    } else {
+      userStatusCode = status
+    }
+  })
+
+  teamStatus.then((status) => {
+    if (status === 200) {
+      const responseBody: LoginResponse = { type: LoginTypes.TEAM }
+      res.status(200).json(responseBody)
+    } else {
+      teamStatusCode = status
+    }
+  })
+
+  return Promise.all([userStatus, teamStatus]).then(() => {
+    if (userStatusCode === 401 && teamStatusCode === 401) {
+      res.status(401).json({ message: 'Invalid username or password' })
+    } else if (userStatusCode === 500 || teamStatusCode === 500) {
+      res.status(500).json({ message: 'Internal server error' })
+    }
+  })
+})
 
 async function tryLoginUser(username: string, password: string, session: IronSession): Promise<number> {
   try {

@@ -1,5 +1,5 @@
 export interface Season {
-  id: string
+  id?: string
   date: Date
   title: string
   themes: QuestTheme[]
@@ -11,7 +11,6 @@ export interface QuestTheme {
 }
 
 export interface Quest {
-  id: string
   title?: string
   description?: string
   points: number
