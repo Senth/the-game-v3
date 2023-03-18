@@ -1,7 +1,6 @@
 export interface Team {
-  id: string
   name: string
-  password: string
+  password?: string
   seasonId: string
   themeIndex: number
   questIndex: number

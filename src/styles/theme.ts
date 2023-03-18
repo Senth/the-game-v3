@@ -1,30 +1,35 @@
 export const theme = {
   colors: {
-    primary: '#0066FF',
-    secondary: '#00CCFF',
-    error: '#FF0000',
+    primary: '#1c7dc8',
+    secondary: '#304ffe',
+    error: '#2d476b',
     border: {
       wrapper: '#304ffe',
       input: '#8c9eff',
     },
     background: {
-      z0: '#000000',
-      z1: '#020231',
-      z2: '#0b0d85',
+      z0: '#05080d',
+      z1: '#131f41',
+      z2: '#2d476b',
+      input: '#0e121f',
     },
     text: {
-      primary: '#eceff1',
+      primary: '#c5c7d8',
+      error: '#FFA500',
     },
   },
   spacing: {
+    tiny: '0.25rem',
     small: '0.5rem',
     normal: '1rem',
     large: '2rem',
   },
   font: {
     family: {
-      body: "'Roboto', sans-serif",
-      header: "'Roboto-Condensed', serif",
+      body: "'Roboto Slab', sans-serif",
+      button: "'Roboto Condensed', sans-serif",
+      header: "'Roboto', sans-serif",
+      input: "'Roboto', sans-serif",
     },
     size: {
       small: '0.8rem',

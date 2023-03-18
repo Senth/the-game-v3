@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
+import { LoginResponse, LoginTypes } from '@/models/response/login'
 
 export default function LoginPage(): JSX.Element {
-  const [teamname, setUsername] = useState('')
+  const [team, setTeam] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
@@ -12,10 +13,15 @@ export default function LoginPage(): JSX.Element {
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
-        body: JSON.stringify({ username: teamname, password }),
+        body: JSON.stringify({ team, password }),
       })
       if (response.ok) {
-        router.push('/game')
+        const loginResponse: LoginResponse = await response.json()
+        if (loginResponse.type === LoginTypes.USER) {
+          router.push('/admin')
+        } else {
+          router.push('/')
+        }
       } else {
         setError('Invalid username or password')
       }
@@ -35,14 +41,15 @@ export default function LoginPage(): JSX.Element {
       <LoginContainer>
         <Title>Login</Title>
         {error && <ErrorMessage>{error}</ErrorMessage>}
+        <HR />
         <Form>
           <InputContainer>
             <InputLabel>Team</InputLabel>
             <Input
               type="text"
-              value={teamname}
-              onChange={(event) => setUsername(event.target.value)}
-              placeholder="Enter your username"
+              value={team}
+              onChange={(event) => setTeam(event.target.value)}
+              placeholder="Enter your team"
             />
           </InputContainer>
           <InputContainer>
@@ -77,7 +84,6 @@ const LoginContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${(props) => props.theme.colors.border.wrapper};
   border-radius: ${(props) => props.theme.spacing.small};
   background-color: ${(props) => props.theme.colors.background.z1};
   padding: ${(props) => props.theme.spacing.normal};
@@ -85,7 +91,7 @@ const LoginContainer = styled.div`
 
 const Title = styled.h1`
   font-size: ${(props) => props.theme.font.size.header};
-  margin-bottom: ${(props) => props.theme.spacing.large};
+  margin-bottom: ${(props) => props.theme.spacing.medium};
 `
 
 const Form = styled.div`
@@ -106,6 +112,7 @@ const InputLabel = styled.label`
 
 const Input = styled.input`
   width: 100%;
+  margin-top: ${(props) => props.theme.spacing.tiny};
   padding: ${(props) => props.theme.spacing.small};
   border-radius: ${(props) => props.theme.spacing.small};
   color: ${(props) => props.theme.colors.text.primary};
@@ -113,6 +120,8 @@ const Input = styled.input`
 `
 
 const Button = styled.button`
+  width: 100%;
+  font-weight: bold;
   padding: ${(props) => props.theme.spacing.small} ${(props) => props.theme.spacing.normal};
   border-radius: ${(props) => props.theme.spacing.small};
   border: none;
@@ -120,6 +129,12 @@ const Button = styled.button`
   color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.font.size.body};
   cursor: pointer;
+  :hover {
+    filter: brightness(1.1);
+  }
+  :active {
+    filter: brightness(0.9);
+  }
 `
 
 const ErrorMessage = styled.div`
@@ -130,4 +145,10 @@ const ErrorMessage = styled.div`
   color: ${(props) => props.theme.colors.text.primary};
   padding: ${(props) => props.theme.spacing.small} ${(props) => props.theme.spacing.normal};
   border-radius: ${(props) => props.theme.spacing.small};
+  color: ${(props) => props.theme.colors.text.error};
+`
+
+const HR = styled.hr`
+  width: 100%;
+  margin: ${(props) => props.theme.spacing.normal} 0;
 `

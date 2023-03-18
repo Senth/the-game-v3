@@ -12,11 +12,11 @@ export interface QuestTheme {
 
 export interface Quest {
   id: string
-  title: string
-  description: string
+  title?: string
+  description?: string
   points: number
   data: string
-  answer: string
+  answer?: string
   hints: Hint[]
 }
 
