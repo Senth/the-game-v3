@@ -1,2 +1,2 @@
-export { default as season } from './season'
+export { default as season } from './seasons'
 export { default as theme } from './theme'

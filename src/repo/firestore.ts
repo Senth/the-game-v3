@@ -5,10 +5,10 @@ const fsClient = new Firestore({
   projectId: config.projectId,
 })
 
-export enum Collections {
-  SEASONS = 'seasons',
-  TEAMS = 'teams',
-  USERS = 'users',
-}
+export const Collections = {
+  SEASONS: config.dbPrefix + 'seasons',
+  TEAMS: config.dbPrefix + 'teams',
+  USERS: config.dbPrefix + 'users',
+} as const
 
 export default fsClient

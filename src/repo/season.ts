@@ -1,10 +1,9 @@
 import fsClient, { Collections } from './firestore'
-import { Season } from '@models/season'
+import { Season } from '@models/quest'
 
 export class SeasonRepo {
   async add(title: string): Promise<Season> {
     const season: Season = {
-      date: new Date(),
       title,
       themes: [],
     }
@@ -28,6 +27,21 @@ export class SeasonRepo {
         seasons.push(season)
       })
       return seasons
+    })
+  }
+
+  async update(season: Season): Promise<Season> {
+    const seasonId = season.id
+
+    if (!seasonId) {
+      throw new Error('Missing season id')
+    }
+    delete season.id
+
+    const promise = fsClient.collection(Collections.SEASONS).doc(seasonId).set(season)
+
+    return promise.then(() => {
+      return season
     })
   }
 }

@@ -1,6 +1,8 @@
 export interface Season {
   id?: string
-  date: Date
+  start?: Date
+  end?: Date
+  length?: number // In Minutes
   title: string
   themes: QuestTheme[]
 }
@@ -13,8 +15,10 @@ export interface QuestTheme {
 export interface Quest {
   title?: string
   description?: string
+  displayTitle?: string
   points: number
-  data: string
+  imageUrl?: string
+  text?: string
   answer?: string
   hints: Hint[]
 }

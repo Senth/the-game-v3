@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${theme.font.family.header};
     color: ${theme.colors.text.header};
   }
-  input {
+  input, select {
     padding: ${theme.spacing.small};
     font-family: ${theme.font.family.input};
     background-color: ${theme.colors.background.input};
@@ -24,6 +24,9 @@ export const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.text.primary};
     font-size: ${theme.font.size.body};
   }
+  select {
+    min-width: 150px;
+  }
   button {
     text-transform: uppercase;
     font-family: ${theme.font.family.button};
@@ -31,5 +34,20 @@ export const GlobalStyle = createGlobalStyle`
   hr {
     border-color: ${theme.colors.primary};
     filter: brightness(1.5);
+  }
+  table {
+    border-collapse: collapse;
+  }
+  th, td {
+    padding: ${theme.spacing.small};
+  }
+  td {
+    border-top: 1px solid ${theme.colors.border.wrapper};
+  }
+  tbody tr:hover {
+    :hover {
+      background-color: ${theme.colors.background.z1};
+      cursor: pointer;
+    }
   }
 `

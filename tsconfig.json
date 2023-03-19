@@ -18,8 +18,10 @@
     "paths": {
       "@config": ["./src/config"],
       "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
       "@models/*": ["./src/models/*"],
       "@pages/*": ["./src/pages/*"],
+      "@redux/*": ["./src/redux/*"],
       "@repo/*": ["./src/repo/*"],
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"]
