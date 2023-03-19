@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import AdminPage from '@components/pages/Admin'
 import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
 import { useRouter } from 'next/router'
 import { Quest, QuestTheme, Season } from '@models/quest'
 import EditLabel from '@components/admin/EditLabel'
 import styled from 'styled-components'
-import seasons from '@pages/api/admin/seasons'
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
@@ -89,7 +88,7 @@ function Themes(props: { season: Season }): JSX.Element {
                 <tr
                   key={questIndex}
                   onClick={() => {
-                    router.push(`/admin/seasons/${id}/quests/${themeIndex}-${questIndex}`)
+                    router.push(`/admin/seasons/${id}/quests/${themeIndex}/${questIndex}`)
                   }}
                 >
                   {questIndex === 0 && <td rowSpan={theme.quests.length}>{theme.title}</td>}
