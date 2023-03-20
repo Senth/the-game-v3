@@ -18,7 +18,7 @@ export default function LoginPage(): JSX.Element {
       if (response.ok) {
         const loginResponse: LoginResponse = await response.json()
         if (loginResponse.type === LoginTypes.USER) {
-          router.push('/admin')
+          router.push('/admin/seasons')
         } else {
           router.push('/')
         }

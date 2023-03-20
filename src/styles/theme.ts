@@ -6,6 +6,7 @@ export const theme = {
     border: {
       wrapper: '#304ffe',
       input: '#8c9eff',
+      button: '#8c9eff',
     },
     background: {
       z0: '#05080d',

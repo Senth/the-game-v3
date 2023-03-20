@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import React, { useState } from 'react'
+import Edit from './Edit'
 
 export interface EditLabelProps {
   name: string
@@ -8,39 +9,16 @@ export interface EditLabelProps {
 }
 
 function EditLabel(props: EditLabelProps): JSX.Element {
-  const value = props.value || ''
-  const [tempValue, setTempValue] = useState(value)
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      const newValue = e.currentTarget.innerText
-      props.onChange(newValue)
-      setTempValue(newValue)
-      e.currentTarget.blur()
-    } else if (e.key === 'Escape') {
-      e.currentTarget.innerText = value
-      e.currentTarget.blur()
-    }
-  }
-
-  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
-    if (tempValue !== value) {
-      e.target.innerText = value
-    }
-  }
-
   return (
     <Wrapper>
       <Label>{props.name}</Label>
-      <Value contentEditable={true} suppressContentEditableWarning={true} onKeyDown={handleKeyDown} onBlur={handleBlur}>
-        {tempValue}
-      </Value>
+      <Edit element={Value} value={props.value} onChange={props.onChange} />
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
+  margin: ${(props) => props.theme.spacing.small} 0;
   display: flex;
   flex-direction: row;
 `

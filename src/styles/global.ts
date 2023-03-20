@@ -15,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     font-family: ${theme.font.family.header};
     color: ${theme.colors.text.header};
   }
-  input, select {
+  input, select, textarea {
     padding: ${theme.spacing.small};
     font-family: ${theme.font.family.input};
     background-color: ${theme.colors.background.input};
@@ -30,6 +30,17 @@ export const GlobalStyle = createGlobalStyle`
   button {
     text-transform: uppercase;
     font-family: ${theme.font.family.button};
+    padding: ${theme.spacing.small} ${theme.spacing.normal};
+    min-width: 150px;
+    border: 0px solid ${theme.colors.border.button};
+    border-radius: ${theme.spacing.small};
+    background-color: ${theme.colors.primary};
+    :hover {
+      filter: brightness(1.2);
+    }
+    :active {
+      filter: brightness(0.9);
+    }
   }
   hr {
     border-color: ${theme.colors.primary};

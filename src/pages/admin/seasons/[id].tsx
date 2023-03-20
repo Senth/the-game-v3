@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { Quest, QuestTheme, Season } from '@models/quest'
 import EditLabel from '@components/admin/EditLabel'
 import styled from 'styled-components'
+import Edit from '@components/admin/Edit'
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
@@ -16,24 +17,20 @@ export default function SeasonPage(): JSX.Element {
   const season = seasons.data?.find((season) => season.id === id) || { title: '', themes: [] }
   console.log('Season', season)
 
-  function handleTitleKeyDown(e: React.KeyboardEvent<HTMLHeadingElement>) {
-    // If enter is pressed, save the title
-    if (e.key === 'Enter') {
-      e.preventDefault()
-
-      const newSeason: Season = {
-        ...season,
-        title: e.currentTarget.innerText,
-      }
-      mutateSeason.update(newSeason)
-
-      // Remove focus from the element
-      e.currentTarget.blur()
-    } else if (e.key === 'Escape') {
-      // If escape is pressed, revert the title
-      e.currentTarget.innerText = season?.title || ''
-      e.currentTarget.blur()
+  function onTitleChange(value: string) {
+    const newSeason: Season = {
+      ...season,
+      title: value,
     }
+    mutateSeason.update(newSeason)
+  }
+
+  function onLengthChange(value: string) {
+    const newSeason: Season = {
+      ...season,
+      length: parseInt(value),
+    }
+    mutateSeason.update(newSeason)
   }
 
   return (
@@ -42,20 +39,8 @@ export default function SeasonPage(): JSX.Element {
       {seasons.error && <p>Error</p>}
       {season && (
         <>
-          <h2 contentEditable={true} onKeyDown={handleTitleKeyDown}>
-            {season.title}
-          </h2>
-          <EditLabel
-            name="Length"
-            value={season.length?.toString()}
-            onChange={(value) => {
-              const newSeason: Season = {
-                ...season,
-                length: parseInt(value),
-              }
-              mutateSeason.update(newSeason)
-            }}
-          />
+          <Edit element="h2" value={season.title} onChange={onTitleChange} />
+          <EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
           <Themes season={season} />
           <AddSection season={season} />
         </>
@@ -147,9 +132,9 @@ function AddSection(props: { season: Season }): JSX.Element {
           <form onSubmit={addQuest}>
             <Label htmlFor="quest">Quest</Label>
             <Input type="text" id="quest" value={questTitle} onChange={(e) => setQuestTitle(e.target.value)} />
-            <select onChange={(e) => setThemeIndex(Number(e.target.value))}>
+            <select value={themeIndex} onChange={(e) => setThemeIndex(Number(e.target.value))}>
               {season.themes.map((theme: QuestTheme, index: number) => (
-                <option key={index} value={index} selected={themeIndex === index}>
+                <option key={index} value={index}>
                   {theme.title}
                 </option>
               ))}

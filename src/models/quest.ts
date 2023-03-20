@@ -18,12 +18,12 @@ export interface Quest {
   displayTitle?: string
   points: number
   imageUrl?: string
-  text?: string
+  content?: string
   answer?: string
   hints: Hint[]
 }
 
 export interface Hint {
   text: string
-  pointDecrease: number
+  points: number
 }
