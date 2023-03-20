@@ -1,0 +1,9 @@
+Dockerfile
+.dockerignore
+node_modules
+yarn-error.log
+.next
+.git
+.vscode
+.env
+.env.local
