@@ -6,8 +6,14 @@ on:
       - main
 
 jobs:
+  upload:
+    name: Upload Docker image
+    uses: ./.github/workflows/upload-service.yml
+    with:
+      tag: ${{ env.github.sha }}
   deploy-dev:
     name: Dev Deploy
     uses: ./.github/workflows/deploy-service.yml
     with:
       environment: dev
+    needs: upload
