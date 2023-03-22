@@ -4,8 +4,21 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ## Todo
 
-- [ ] Add teams
-- [ ] Start and end seasons
+- [ ] Github Actions for CI/CD deploy to dev & prod
+- [ ] Admin: Add teams
+- [ ] Admin: Start and end seasons
+
+### Game Logic
+
+- [ ] Wait before starting game
+- [ ] Automatically fetch game when it starts
+- [ ] UI/UX for game
+  - [ ] Show current quest
+  - [ ] Show hints
+  - [ ] Show timer and all team progress/points
+- [ ] Backend for checking answer and continuing game
+- [ ] Forward to next quest when one in the team got the right answer
+- [ ] End game when all quests are done
 
 - [ ] Create themes and quests
 - [ ] Test run
@@ -19,3 +32,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Admin: Season page + ability to create seasons
 - [x] Admin: Quest theme + quest page
 - [x] Display and add hints to quests
+- [x] Infrastructure for GCP projects
