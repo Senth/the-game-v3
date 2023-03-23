@@ -6,38 +6,86 @@ on:
         description: The environment to deploy to
         required: true
         type: string
+      tag:
+        description: The tag to deploy
+        required: true
+        type: string
+      APP_NAME:
+        description: The name of the app
+        required: true
+        type: string
+    secrets:
+      GCP_PROJECT_ID:
+        description: The GCP project ID to deploy to
+        required: true
+      GCP_PROJECT_CICD_ID:
+        description: The GCP project ID for CICD
+        required: true
+      GCP_PROJECT_CICD_NUMBER:
+        description: The GCP project number
+        required: true
+      GCP_SERVICE_ACCOUNT:
+        description: The GCP service account
+        required: true
+      WORKLOAD_IDENTITY_PROVIDER:
+        description: The GCP workload identity provider
+        required: true
   workflow_call:
     inputs:
       environment:
         required: true
         type: string
+      tag:
+        required: true
+        type: string
+      APP_NAME:
+        required: true
+        type: string
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCP_PROJECT_CICD_ID:
+        required: true
+      GCP_PROJECT_CICD_NUMBER:
+        required: true
+      GCP_SERVICE_ACCOUNT:
+        required: true
+      WORKLOAD_IDENTITY_PROVIDER:
+        required: true
 
 jobs:
   deploy:
     name: Deploy GCP Cloud Run
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     environment:
       name: ${{ inputs.environment}}
     env:
-      IMAGE_NAME: eu.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ vars.APP_NAME }}:${{ github.ref_name }}
+      IMAGE_NAME: eu.gcr.io/${{ secrets.GCP_PROJECT_CICD_ID }}/${{ inputs.APP_NAME }}/${{ inputs.tag }}
       LOCATION: europe-west1
     steps:
       - name: Login
-        uses: google-github-actions/setup-gcloud@v0
+        uses: google-github-actions/auth@v0
         with:
           workload_identity_provider: projects/${{ secrets.GCP_PROJECT_CICD_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}/providers/github
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           token_format: access_token
 
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v0
+
       - name: Deploy Docker image
         run: >
-          gcloud run deploy ${{ vars.APP_NAME }}
+          gcloud --project ${{ secrets.GCP_PROJECT_ID }} run deploy ${{ vars.APP_NAME }}
           --image $IMAGE_NAME
           --region $LOCATION
           --min-instances=0
           --max-instances=1
           --platform managed
+          --allow-unauthenticated
           --cpu=1
           --memory=128Mi
           --port=80
-          --revision-suffix=${{ github.ref_name }}
+          --revision-suffix=${{ github.run_id }}

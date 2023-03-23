@@ -9,11 +9,31 @@ jobs:
   upload:
     name: Upload Docker image
     uses: ./.github/workflows/upload-service.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
-      tag: ${{ env.github.sha }}
+      tag: main:${{ github.sha }}
+      APP_NAME: ${{ vars.APP_NAME }}
+    secrets:
+      GCP_PROJECT_CICD_ID: ${{ secrets.GCP_PROJECT_CICD_ID }}
+      GCP_PROJECT_CICD_NUMBER: ${{ secrets.GCP_PROJECT_CICD_NUMBER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
   deploy-dev:
     name: Dev Deploy
     uses: ./.github/workflows/deploy-service.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       environment: dev
+      tag: main:${{ github.sha }}
+      APP_NAME: ${{ vars.APP_NAME }}
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_PROJECT_CICD_ID: ${{ secrets.GCP_PROJECT_CICD_ID }}
+      GCP_PROJECT_CICD_NUMBER: ${{ secrets.GCP_PROJECT_CICD_NUMBER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
     needs: upload
