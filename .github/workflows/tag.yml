@@ -5,13 +5,51 @@ on:
     tags: [v*.*.*]
 
 jobs:
-  deploy-prod:
-    name: Prod Deploy
-    uses: ./.github/workflows/deploy-service.yml
+  upload:
+    name: Upload Docker image
+    uses: ./.github/workflows/upload-service.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
-      environment: prod
+      tag: main:${{ github.ref_name }}
+      APP_NAME: ${{ vars.APP_NAME }}
+    secrets:
+      GCP_PROJECT_CICD_ID: ${{ secrets.GCP_PROJECT_CICD_ID }}
+      GCP_PROJECT_CICD_NUMBER: ${{ secrets.GCP_PROJECT_CICD_NUMBER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
   deploy-dev:
     name: Dev Deploy
     uses: ./.github/workflows/deploy-service.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       environment: dev
+      tag: tag:${{ github.ref_name }}
+      APP_NAME: ${{ vars.APP_NAME }}
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_PROJECT_CICD_ID: ${{ secrets.GCP_PROJECT_CICD_ID }}
+      GCP_PROJECT_CICD_NUMBER: ${{ secrets.GCP_PROJECT_CICD_NUMBER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+    needs: upload
+  deploy-prod:
+    name: Prod Deploy
+    uses: ./.github/workflows/deploy-service.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      environment: prod
+      tag: tag:${{ github.ref_name }}
+      APP_NAME: ${{ vars.APP_NAME }}
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_PROJECT_CICD_ID: ${{ secrets.GCP_PROJECT_CICD_ID }}
+      GCP_PROJECT_CICD_NUMBER: ${{ secrets.GCP_PROJECT_CICD_NUMBER }}
+      GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+      WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+    needs: upload
