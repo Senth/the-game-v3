@@ -28,11 +28,14 @@ export const GlobalStyle = createGlobalStyle`
     min-width: 150px;
   }
   button {
+    color: ${theme.colors.text.primary};
     text-transform: uppercase;
     font-family: ${theme.font.family.button};
+    font-weight: bold;
+    font-size: ${theme.font.size.small};
     padding: ${theme.spacing.small} ${theme.spacing.normal};
     min-width: 150px;
-    border: 0px solid ${theme.colors.border.button};
+    border: none;
     border-radius: ${theme.spacing.small};
     background-color: ${theme.colors.primary};
     :hover {

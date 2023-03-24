@@ -20,6 +20,16 @@ export class TeamRepo {
 
     return teamData as Team
   }
+
+  async update(team: Team): Promise<void> {
+    const teamId = team.name
+
+    if (!teamId) {
+      throw new Error('Missing team id')
+    }
+
+    await fsClient.collection(Collections.TEAMS).doc(teamId).set(team)
+  }
 }
 
 const teamRepo = new TeamRepo()

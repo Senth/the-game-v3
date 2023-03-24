@@ -120,19 +120,9 @@ const Input = styled.input`
 const Button = styled.button`
   width: 100%;
   font-weight: bold;
-  padding: ${(props) => props.theme.spacing.small} ${(props) => props.theme.spacing.normal};
-  border-radius: ${(props) => props.theme.spacing.small};
-  border: none;
   background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.font.size.body};
-  cursor: pointer;
-  :hover {
-    filter: brightness(1.1);
-  }
-  :active {
-    filter: brightness(0.9);
-  }
 `
 
 const ErrorMessage = styled.div`

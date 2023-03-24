@@ -4,6 +4,7 @@ import seasonRepo from '@repo/season'
 import teamRepo from '@repo/team'
 import { Season, Quest, Game } from '@models/quest'
 import { Team } from '@models/team'
+import { AnswerResponse, GamePostRequest } from '@models/api/game'
 
 export default withTeam(async function handler(req, res) {
   const { method } = req
@@ -49,7 +50,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Get the current quest
-    const quest = getCurrentQuest(season, team)
+    const quest = getCurrentQuest(season, team, true)
     if (quest) {
       response.quest = quest
     } else {
@@ -60,12 +61,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   })
 }
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  if (!req.body) {
-    return res.status(400).json({ message: 'Missing request body' })
-  }
-}
-
 function hasSeasonStarted(season: Season): boolean {
   if (!season.start) {
     return false
@@ -74,15 +69,7 @@ function hasSeasonStarted(season: Season): boolean {
   return season.start.getTime() < Date.now()
 }
 
-function hasSeasonEnded(season: Season): boolean {
-  if (!season.end) {
-    return false
-  }
-
-  return season.end.getTime() < Date.now()
-}
-
-function getCurrentQuest(season: Season, team: Team): Quest | undefined {
+function getCurrentQuest(season: Season, team: Team, filter: boolean): Quest | undefined {
   // Get the current theme for the team
   const theme = season.themes[team.themeIndex]
   if (!theme) {
@@ -96,16 +83,124 @@ function getCurrentQuest(season: Season, team: Team): Quest | undefined {
   }
 
   // Strip out answers and valuable information
-  delete quest.title
-  delete quest.description
-  delete quest.answer
+  if (filter) {
+    delete quest.title
+    delete quest.description
+    delete quest.answer
 
-  // Strip out hint texts they haven't been unlocked yet
-  for (let i = 0; i < quest.hints.length; i++) {
-    if (i >= team.hintIndex) {
-      delete quest.hints[i].text
+    // Strip out hint texts they haven't been unlocked yet
+    for (let i = 0; i < quest.hints.length; i++) {
+      if (i > team.hintIndex) {
+        delete quest.hints[i].text
+      }
     }
   }
 
   return quest
+}
+
+async function post(req: NextApiRequest, res: NextApiResponse) {
+  if (!req.body) {
+    return res.status(400).json({ message: 'Missing request body' })
+  }
+
+  let team = req.session.team
+  if (!team) {
+    return res.status(401).json({ message: 'Unauthorized' })
+  }
+
+  // Get the current team information from the database
+  team = (await teamRepo.getTeam(team.name)) as Team
+
+  // Get the season for the team
+  return seasonRepo
+    .get(team.seasonId)
+    .then((season) => {
+      // Check and make sure the season exists
+      if (!season) {
+        return res.status(404).json({ message: 'Season not found' })
+      }
+      if (!team) {
+        return res.status(404).json({ message: 'Team not found' })
+      }
+
+      const quest = getCurrentQuest(season, team, false)
+      if (!quest) {
+        return res.status(404).json({ message: 'Quest not found' })
+      }
+
+      const request = JSON.parse(req.body) as GamePostRequest
+
+      if (request.answer) {
+        return checkAnswer(request, res, team, season, quest)
+      } else if (request.unlockHint) {
+        return unlockHint(request, res, team, quest)
+      } else {
+        return res.status(400).json({ message: 'Invalid request body' })
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+      return res.status(500).json({ message: 'Internal server error' })
+    })
+}
+
+async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Team, season: Season, quest: Quest) {
+  console.log(req, quest.answer)
+
+  // Check if the answer is correct
+  if (req.answer?.toLowerCase() !== quest.answer?.toLowerCase()) {
+    const body: AnswerResponse = { correct: false }
+    return res.status(200).json(body)
+  }
+
+  const response: AnswerResponse = {
+    correct: true,
+  }
+  res.status(200).json(response)
+
+  // Check how many hints they have unlocked
+  let hintPoints = 0
+  for (let i = 0; i <= team.hintIndex; i++) {
+    const points = quest.hints[i].points
+    if (points) {
+      hintPoints += quest.hints[i].points
+    }
+  }
+
+  // Update the team score
+  team.score = team.score + quest.points - hintPoints
+  team.hintIndex = -1
+
+  // Get the next quest
+  const theme = season.themes[team.themeIndex]
+  const nextQuest = theme.quests[team.questIndex + 1]
+
+  // Next quest exists in theme, update the index
+  if (nextQuest) {
+    team.questIndex += 1
+  } else {
+    team.themeIndex += 1
+    team.questIndex = 0
+  }
+
+  await teamRepo.update(team)
+
+  return
+}
+
+async function unlockHint(req: GamePostRequest, res: NextApiResponse, team: Team, quest: Quest) {
+  const nextHintIndex = team.hintIndex + 1
+
+  // Check if the hint exists
+  if (nextHintIndex >= quest.hints.length) {
+    return res.status(400).json({ message: 'Invalid hint index' })
+  }
+
+  res.status(200).json({})
+
+  // Unlock the next hint
+  team.hintIndex = nextHintIndex
+
+  await teamRepo.update(team)
 }

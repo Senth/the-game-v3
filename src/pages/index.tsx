@@ -1,16 +1,18 @@
-import { Game } from '@models/quest'
-import React, { ReactNode, useEffect } from 'react'
-import styled from 'styled-components'
+import { Game, Hint } from '@models/quest'
+import React, { useEffect } from 'react'
+import styled, { keyframes } from 'styled-components'
+import Parser from 'react-html-parser'
+import { AnswerResponse, GamePostRequest } from '@models/api/game'
 
 export default function GamePage(): JSX.Element {
   return (
     <div>
-      <GameSection />
+      <GamePrepare />
     </div>
   )
 }
 
-function GameSection(): JSX.Element {
+function GamePrepare(): JSX.Element {
   const [fetched, setFetched] = React.useState(false)
   const [game, setGame] = React.useState<Game>({ completed: false, score: 0 })
   const now = new Date()
@@ -27,7 +29,6 @@ function GameSection(): JSX.Element {
           game.end = new Date(game.end)
         }
         setGame(game)
-        console.log(game.completed)
         setFetched(true)
       })
   }
@@ -66,7 +67,7 @@ function GameSection(): JSX.Element {
     return <Info text="Game has ended" value={value} />
   }
 
-  return <div></div>
+  return <GameSection game={game} />
 }
 
 function Info(props: { text: string; value?: any }): JSX.Element {
@@ -110,4 +111,190 @@ const H1 = styled.h1`
 
 const Value = styled.h1`
   margin-bottom: 0;
+`
+
+function GameSection(props: { game: Game }): JSX.Element {
+  const { game } = props
+  const quest = game.quest
+
+  let content: any = ''
+  if (quest?.content) {
+    content = Parser(quest.content)
+  }
+
+  return (
+    <GameContainer>
+      {quest?.displayTitle && <GameTitle>{quest.displayTitle}</GameTitle>}
+      {quest?.imageUrl && <GameImage src={quest.imageUrl} />}
+      {content}
+      <hr />
+      <Hints game={game} />
+      <hr />
+      <Answer />
+    </GameContainer>
+  )
+}
+
+const GameContainer = styled.div`
+  padding: ${(props) => props.theme.spacing.large};
+`
+
+const GameTitle = styled.h3`
+  margin-top: 0;
+`
+
+const GameImage = styled.img`
+  width: 100%;
+`
+
+function Hints(props: { game: Game }): JSX.Element {
+  const { game } = props
+  let points = calculateWorth(game)
+
+  const hints = game.quest?.hints.filter((hint) => hint.text)
+  const nextHint = game.quest?.hints.find((hint) => !hint.text)
+
+  function revealHint() {
+    const request: GamePostRequest = {
+      unlockHint: true,
+    }
+
+    fetch('/api/game', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    })
+  }
+
+  return (
+    <HintContainer>
+      <WorthInfo>Worth {points}p</WorthInfo>
+      <HintList>
+        {hints?.map((hint) => (
+          <Hint key={hint.text} hint={hint} />
+        ))}
+      </HintList>
+      {nextHint && <ShowHintButton onClick={revealHint}>Reveal Hint (-{nextHint.points}p)</ShowHintButton>}
+    </HintContainer>
+  )
+}
+
+function Hint(prop: { hint: Hint }): JSX.Element {
+  const { hint } = prop
+
+  return <HintText>{hint.text}</HintText>
+}
+
+function calculateWorth(game: Game): number {
+  let points = 0
+
+  if (game.quest) {
+    points = game.quest.points
+
+    // Decrease points for each hint
+    for (const hint of game.quest.hints) {
+      if (hint.text) {
+        points -= hint.points
+      }
+    }
+  }
+
+  return points
+}
+
+const HintContainer = styled.div``
+
+const WorthInfo = styled.h4`
+  margin-top: ${(props) => props.theme.spacing.normal};
+  margin-bottom: ${(props) => props.theme.spacing.normal};
+`
+
+const HintList = styled.ul`
+  padding: 0;
+`
+
+const HintText = styled.li`
+  list-style-type: none;
+
+  ::before {
+    content: '📜';
+    display: inline-block;
+    padding-right: ${(props) => props.theme.spacing.small};
+  }
+`
+
+const ShowHintButton = styled.button`
+  width: 100%;
+`
+
+function Answer(): JSX.Element {
+  const [answer, setAnswer] = React.useState('')
+  const [wrong, setWrong] = React.useState(false)
+  const [correct, setCorrect] = React.useState(false)
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const request: GamePostRequest = {
+      answer: answer,
+    }
+
+    fetch('/api/game', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setAnswer('')
+        if (response && response.correct) {
+          setCorrect(true)
+          setTimeout(() => setCorrect(false), 1000)
+        } else {
+          setWrong(true)
+          setTimeout(() => setWrong(false), 1000)
+        }
+      })
+  }
+
+  return (
+    <AnswerContainer>
+      <AnswerTitle>Answer</AnswerTitle>
+      <form onSubmit={submit}>
+        <AnswerInput value={answer} onChange={(e) => setAnswer(e.target.value)} />
+      </form>
+      {wrong && <AnswerWrong>Wrong answer!</AnswerWrong>}
+      {correct && <AnswerCorrect>correct answer!</AnswerCorrect>}
+    </AnswerContainer>
+  )
+}
+
+const AnswerTitle = styled.h4`
+  margin-top: ${(props) => props.theme.spacing.normal};
+  margin-bottom: ${(props) => props.theme.spacing.small};
+`
+
+const AnswerContainer = styled.div``
+
+const AnswerInput = styled.input`
+  width: calc(100% - ${(props) => props.theme.spacing.normal});
+`
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`
+
+const AnswerWrong = styled.div`
+  color: ${(props) => props.theme.colors.text.error};
+  font-size: ${(props) => props.theme.font.size.small};
+  margin-top: ${(props) => props.theme.spacing.small};
+
+  animation: ${fadeOut} 1.2s ease-in-out;
+`
+
+const AnswerCorrect = styled.div`
+  color: ${(props) => props.theme.colors.text.success};
+  font-size: ${(props) => props.theme.font.size.small};
+  margin-top: ${(props) => props.theme.spacing.small};
+
+  animation: ${fadeOut} 1.2s ease-in-out;
 `

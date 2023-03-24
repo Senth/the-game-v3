@@ -18,6 +18,7 @@ export const theme = {
       primary: '#c5c7d8',
       header: '#bbdefb',
       error: '#FFA500',
+      success: '#00FF00',
     },
   },
   spacing: {
