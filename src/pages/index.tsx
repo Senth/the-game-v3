@@ -2,11 +2,13 @@ import { Game, Hint } from '@models/quest'
 import React, { useEffect } from 'react'
 import styled, { keyframes } from 'styled-components'
 import Parser from 'react-html-parser'
-import { AnswerResponse, GamePostRequest } from '@models/api/game'
+import { GamePostRequest } from '@models/api/game'
+import Stats from '@components/stats/stats'
 
 export default function GamePage(): JSX.Element {
   return (
     <div>
+      <Stats />
       <GamePrepare />
     </div>
   )

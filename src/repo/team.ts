@@ -10,17 +10,6 @@ export class TeamRepo {
     })
   }
 
-  async getTeam(teamName: string): Promise<Team | null> {
-    const teamDoc = await fsClient.collection(Collections.TEAMS).doc(teamName).get()
-    const teamData = teamDoc.data()
-
-    if (!teamData) {
-      return null
-    }
-
-    return teamData as Team
-  }
-
   async update(team: Team): Promise<void> {
     const teamId = team.name
 
@@ -29,6 +18,23 @@ export class TeamRepo {
     }
 
     await fsClient.collection(Collections.TEAMS).doc(teamId).set(team)
+  }
+
+  async getTeam(teamName: string): Promise<Team | undefined> {
+    const teamDoc = await fsClient.collection(Collections.TEAMS).doc(teamName).get()
+    const teamData = teamDoc.data()
+
+    if (!teamData) {
+      return
+    }
+
+    return teamData as Team
+  }
+
+  async getTeams(seasonId: string): Promise<Team[] | undefined> {
+    const teamDocs = await fsClient.collection(Collections.TEAMS).where('seasonId', '==', seasonId).get()
+
+    return teamDocs.docs.map((team) => team.data() as Team) as Team[]
   }
 }
 

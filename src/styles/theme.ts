@@ -20,6 +20,11 @@ export const theme = {
       error: '#FFA500',
       success: '#00FF00',
     },
+    statusbar: {
+      time: '#0d47a1',
+      teams: '#004d40',
+      border: '#05080d',
+    },
   },
   spacing: {
     tiny: '0.25rem',
