@@ -13,12 +13,20 @@ export default function StatsHeader(): JSX.Element {
 
   function updateStats() {
     fetch('/api/stats')
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error('Failed to fetch stats')
+        }
+        return response.json()
+      })
       .then((stats) => {
         // Fix dates
         stats.start = new Date(stats.start)
         stats.end = new Date(stats.end)
         setStats(stats)
+      })
+      .catch((err) => {
+        console.error(err)
       })
   }
 
