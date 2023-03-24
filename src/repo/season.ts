@@ -16,20 +16,6 @@ export class SeasonRepo {
     })
   }
 
-  async getAll(): Promise<Season[]> {
-    const promise = fsClient.collection(Collections.SEASONS).get()
-
-    return promise.then((snapshot) => {
-      const seasons: Season[] = []
-      snapshot.forEach((doc) => {
-        const season = doc.data() as Season
-        season.id = doc.id
-        seasons.push(season)
-      })
-      return seasons
-    })
-  }
-
   async update(season: Season): Promise<Season> {
     const seasonId = season.id
 
@@ -42,6 +28,48 @@ export class SeasonRepo {
 
     return promise.then(() => {
       return season
+    })
+  }
+
+  async get(seasonId: string): Promise<Season> {
+    const promise = fsClient.collection(Collections.SEASONS).doc(seasonId).get()
+
+    return promise.then((doc) => {
+      const season = doc.data() as Season
+      season.id = doc.id
+
+      // Fix date
+      if (season.start) {
+        season.start = new Date(season.start)
+      }
+      if (season.end) {
+        season.end = new Date(season.end)
+      }
+
+      return season
+    })
+  }
+
+  async getAll(): Promise<Season[]> {
+    const promise = fsClient.collection(Collections.SEASONS).get()
+
+    return promise.then((snapshot) => {
+      const seasons: Season[] = []
+      snapshot.forEach((doc) => {
+        const season = doc.data() as Season
+        season.id = doc.id
+
+        // Fix date
+        if (season.start) {
+          season.start = new Date(season.start)
+        }
+        if (season.end) {
+          season.end = new Date(season.end)
+        }
+
+        seasons.push(season)
+      })
+      return seasons
     })
   }
 }

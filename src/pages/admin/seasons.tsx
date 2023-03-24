@@ -74,7 +74,8 @@ function StartButton(prop: { season: Season }): JSX.Element {
     }
 
     // Set start and end times
-    season.start = new Date()
+    const now = new Date()
+    season.start = new Date(now.getTime() + 15 * 1000)
 
     // Add length to start time
     season.end = new Date(season.start.getTime() + season.length * 60 * 1000)

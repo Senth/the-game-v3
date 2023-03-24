@@ -24,6 +24,14 @@ export interface Quest {
 }
 
 export interface Hint {
-  text: string
+  text?: string
   points: number
+}
+
+export interface Game {
+  quest?: Quest
+  start?: Date
+  end?: Date
+  score: number
+  completed: boolean
 }

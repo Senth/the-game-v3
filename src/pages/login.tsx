@@ -101,17 +101,19 @@ const Form = styled.div`
 `
 
 const InputContainer = styled.div`
-  width: 100%;
+  display: block;
+  width: 70vw;
   margin-bottom: ${(props) => props.theme.spacing.normal};
 `
 
 const InputLabel = styled.label`
+  display: block;
   font-size: ${(props) => props.theme.font.size.body};
-  margin-bottom: ${(props) => props.theme.spacing.small};
 `
 
 const Input = styled.input`
-  width: 100%;
+  display: block;
+  width: calc(100% - ${(props) => props.theme.spacing.normal});
   margin-top: ${(props) => props.theme.spacing.tiny};
 `
 

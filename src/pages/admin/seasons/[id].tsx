@@ -171,8 +171,10 @@ function AddTeam(props: { season: Season }): JSX.Element {
       name: name,
       password: password,
       seasonId: season.id || '',
+      score: 0,
       questIndex: 0,
       themeIndex: 0,
+      hintIndex: -1,
     }
 
     console.log('New team', newTeam)

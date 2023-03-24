@@ -4,18 +4,12 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ## Todo
 
-- [ ] Wait before starting game
-- [ ] Automatically fetch game when it starts
 - [ ] UI/UX for game
   - [ ] Show current quest
   - [ ] Show hints
   - [ ] Show timer and all team progress/points
 - [ ] Backend for checking answer and continuing game
 - [ ] Forward to next quest when one in the team got the right answer
-- [ ] End game when all quests are done
-
-- [ ] Create themes and quests
-- [ ] Test run
 
 ## Done
 
@@ -30,3 +24,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Github Actions for CI/CD deploy to dev & prod
 - [x] Admin: Add teams
 - [x] Admin: Start and end seasons
+- [x] Game: Wait, start, end, comtpleted screens
