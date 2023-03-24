@@ -1,5 +1,5 @@
 import UserRepo from '@repo/user'
-import TeamRepo from '@repo/team'
+import teamRepo from '@repo/team'
 import { LoginResponse, LoginTypes } from '@models/api/login'
 import { IronSession } from 'iron-session'
 import { withSessionApi } from '@utils/session'
@@ -75,7 +75,6 @@ async function tryLoginUser(username: string, password: string, session: IronSes
 
 async function tryLoginTeam(teamName: string, password: string, session: IronSession): Promise<number> {
   try {
-    const teamRepo = new TeamRepo()
     const team = await teamRepo.getTeam(teamName)
 
     if (!team) {

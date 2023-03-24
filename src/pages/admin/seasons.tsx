@@ -2,8 +2,9 @@ import React from 'react'
 import AdminPage from '@components/pages/Admin'
 import styled from 'styled-components'
 import { SeasonPostRequest } from '@models/api/season'
-import { useSeasons } from '@hooks/api/seasons'
+import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
 import { useRouter } from 'next/router'
+import { Season } from '@models/quest'
 
 export default function SeasonsPage(): JSX.Element {
   return (
@@ -11,43 +12,6 @@ export default function SeasonsPage(): JSX.Element {
       <Seasons />
       <NewSeason />
     </AdminPage>
-  )
-}
-
-function NewSeason(): JSX.Element {
-  const [season, setSeason] = React.useState<string>('')
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    if (season.length < 3) {
-      // TODO Error message
-      return
-    }
-
-    const body: SeasonPostRequest = {
-      title: season,
-    }
-
-    const response = await fetch('/api/admin/seasons', {
-      method: 'POST',
-      body: JSON.stringify(body),
-    })
-    if (response.ok) {
-      // TODO add the season to the list
-      setSeason('')
-    } else {
-      console.log('error')
-      // TODO Error message
-    }
-  }
-
-  return (
-    <p>
-      <form onSubmit={onSubmit}>
-        New Season: <Input type="text" value={season} onChange={(e) => setSeason(e.target.value)} />
-      </form>
-    </p>
   )
 }
 
@@ -80,7 +44,7 @@ function Seasons(): JSX.Element {
               >
                 <td>{season.title}</td>
                 <td>{season.length}</td>
-                <td>{season.start ? season.start.toString() : ''}</td>
+                <td>{season.start ? season.start.toString() : <StartButton season={season} />}</td>
                 <td>{season.end ? season.end.toString() : ''}</td>
               </tr>
             ))}
@@ -96,3 +60,65 @@ const Input = styled.input`
 `
 
 const SeasonsTable = styled.table``
+
+function StartButton(prop: { season: Season }): JSX.Element {
+  const { season } = prop
+  const mutateSeason = useSeasonsMutate()
+
+  function startSeason(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation()
+
+    if (!season.length) {
+      // TODO Error message
+      return
+    }
+
+    // Set start and end times
+    season.start = new Date()
+
+    // Add length to start time
+    season.end = new Date(season.start.getTime() + season.length * 60 * 1000)
+
+    mutateSeason.update(season)
+  }
+
+  return <button onClick={startSeason}>Start</button>
+}
+
+function NewSeason(): JSX.Element {
+  const [season, setSeason] = React.useState<string>('')
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    if (season.length < 3) {
+      // TODO Error message
+      return
+    }
+
+    const body: SeasonPostRequest = {
+      title: season,
+    }
+
+    const response = await fetch('/api/admin/seasons', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    })
+    if (response.ok) {
+      // TODO add the season to the list
+      setSeason('')
+    } else {
+      console.log('error')
+      // TODO Error message
+    }
+  }
+
+  return (
+    <p>
+      <form onSubmit={submit}>
+        New Season:
+        <Input type="text" placeholder="Season" value={season} onChange={(e) => setSeason(e.target.value)} />
+      </form>
+    </p>
+  )
+}

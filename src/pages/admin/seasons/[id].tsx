@@ -6,6 +6,7 @@ import { Quest, QuestTheme, Season } from '@models/quest'
 import EditLabel from '@components/admin/EditLabel'
 import styled from 'styled-components'
 import Edit from '@components/admin/Edit'
+import { Team } from '@models/team'
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
@@ -43,6 +44,7 @@ export default function SeasonPage(): JSX.Element {
           <EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
           <Themes season={season} />
           <AddSection season={season} />
+          <AddTeam season={season} />
         </>
       )}
     </AdminPage>
@@ -154,3 +156,58 @@ const Input = styled.input`
   display: inline-block;
   margin: ${(props) => props.theme.spacing.small};
 `
+
+function AddTeam(props: { season: Season }): JSX.Element {
+  const { season } = props
+
+  const [name, setName] = React.useState<string>('')
+  const [password, setPassword] = React.useState<string>('')
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    console.log('onSubmit')
+    event.preventDefault()
+
+    const newTeam: Team = {
+      name: name,
+      password: password,
+      seasonId: season.id || '',
+      questIndex: 0,
+      themeIndex: 0,
+    }
+
+    console.log('New team', newTeam)
+
+    const response = fetch('/api/admin/teams', {
+      method: 'POST',
+      body: JSON.stringify(newTeam),
+    })
+
+    response
+      .then((response) => {
+        console.log('Response', response)
+        if (response.ok) {
+          // TODO Success message
+          setName('')
+          setPassword('')
+        } else {
+          console.error('Error adding team', response)
+          // TODO Error message
+        }
+      })
+      .catch((error) => {
+        console.error('Error adding team', error)
+        // TODO Error message
+      })
+  }
+
+  return (
+    <p>
+      <form onSubmit={submit}>
+        New Team:
+        <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input type="submit" value="Add" />
+      </form>
+    </p>
+  )
+}

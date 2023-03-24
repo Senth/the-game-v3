@@ -1,9 +1,17 @@
 import { Team } from '@models/team'
-import fsClient from './firestore'
+import fsClient, { Collections } from './firestore'
 
-export default class TeamRepo {
+export class TeamRepo {
+  async add(team: Team): Promise<Team> {
+    const promise = fsClient.collection(Collections.TEAMS).doc(team.name).set(team)
+
+    return promise.then(() => {
+      return team
+    })
+  }
+
   async getTeam(teamName: string): Promise<Team | null> {
-    const teamDoc = await fsClient.collection('teams').doc(teamName).get()
+    const teamDoc = await fsClient.collection(Collections.TEAMS).doc(teamName).get()
     const teamData = teamDoc.data()
 
     if (!teamData) {
@@ -13,3 +21,6 @@ export default class TeamRepo {
     return teamData as Team
   }
 }
+
+const teamRepo = new TeamRepo()
+export default teamRepo
