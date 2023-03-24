@@ -1,14 +1,18 @@
 import React, { PropsWithChildren } from 'react'
 import styled from 'styled-components'
+import StatsHeader from '@components/stats/stats'
 
 export default function AdminPage(props: PropsWithChildren<{}>): JSX.Element {
   // TODO Make sure user is logged in
 
   return (
-    <AdminWrapper>
-      <h1>Admin</h1>
-      <AdminContent>{props.children}</AdminContent>
-    </AdminWrapper>
+    <>
+      <StatsHeader />
+      <AdminWrapper>
+        <h1>Admin</h1>
+        <AdminContent>{props.children}</AdminContent>
+      </AdminWrapper>
+    </>
   )
 }
 
