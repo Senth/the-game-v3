@@ -237,7 +237,7 @@ function Answer(): JSX.Element {
     e.preventDefault()
 
     const request: GamePostRequest = {
-      answer: answer,
+      answer: answer.trim(),
     }
 
     fetch('/api/game', {
