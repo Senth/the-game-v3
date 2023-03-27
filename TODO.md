@@ -4,12 +4,19 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ## Todo
 
-- [ ] UI/UX for game
-  - [ ] Show current quest
-  - [ ] Show hints
-  - [ ] Show timer and all team progress/points
-- [ ] Backend for checking answer and continuing game
-- [ ] Forward to next quest when one in the team got the right answer
+### Hints
+
+- [ ] Instead of getting next hint, get the ability to reveal a specific hint
+
+### Admin
+
+- [ ] When looking at a quest, show the hints that have been revealed and by which team.
+- [ ] Add a nice overview of the game, what quest they are on (with a link to the quest)
+      And which hints they have revealed.
+
+### Chat
+
+- [ ] Add a chat to the game
 
 ## Done
 
@@ -25,3 +32,9 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Admin: Add teams
 - [x] Admin: Start and end seasons
 - [x] Game: Wait, start, end, comtpleted screens
+- [x] UI/UX for game
+  - [x] Show current quest
+  - [x] Show hints
+  - [x] Show timer and all team progress/points
+- [x] Backend for checking answer and continuing game
+- [x] Forward to next quest when one in the team got the right answer
