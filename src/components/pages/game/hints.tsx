@@ -64,7 +64,7 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
     <HintText>
       {hint.text || (
         <RevealButton onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleClick}>
-          {isHolding && <HoldSlider />}
+          {isHolding && <HoldSlider onClick={handleClick} />}
           Reveal Hint <HintPoints>(-{hint.points}p)</HintPoints>
         </RevealButton>
       )}
@@ -114,16 +114,6 @@ const HintText = styled.li`
   }
 `
 
-const RevealButton = styled.button`
-  position: relative;
-  flex-grow: 1;
-`
-
-const HintPoints = styled.span`
-  color: ${(props) => props.theme.colors.text.error};
-  padding-left: ${(props) => props.theme.spacing.small};
-`
-
 const slideKeyframes = keyframes`
   from {
     width: 0;
@@ -131,6 +121,17 @@ const slideKeyframes = keyframes`
   to {
     width: 100%;
   }
+`
+
+const RevealButton = styled.button`
+  position: relative;
+  user-select: none;
+  flex-grow: 1;
+`
+
+const HintPoints = styled.span`
+  color: ${(props) => props.theme.colors.text.error};
+  padding-left: ${(props) => props.theme.spacing.small};
 `
 
 const HoldSlider = styled.div`

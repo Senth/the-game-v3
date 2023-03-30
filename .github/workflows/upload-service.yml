@@ -1,4 +1,4 @@
-name: Deploy GCP Cloud Run
+name: Build and Upload Docker image
 on:
   workflow_dispatch:
     inputs:
@@ -43,8 +43,8 @@ on:
         required: true
 
 jobs:
-  deploy:
-    name: Deploy GCP Cloud Run
+  build:
+    name: Build and Upload Docker image
     runs-on: ubuntu-latest
     permissions:
       contents: read
