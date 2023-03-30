@@ -62,7 +62,9 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
     <HintText>
       {hint.text || (
         <>
-          {!isRevealing && (
+          {isRevealing ? (
+            <Fetching>Fetching...</Fetching>
+          ) : (
             <RevealButton onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onContextMenu={handleContextMenu}>
               {isHolding && <HoldSlider />}
               Reveal Hint <HintPoints>(-{hint.points}p)</HintPoints>
@@ -147,4 +149,8 @@ const HoldSlider = styled.div`
   background-color: ${(props) => props.theme.colors.primary};
   filter: brightness(1.5);
   z-index: -1;
+`
+
+const Fetching = styled.div`
+  color: ${(props) => props.theme.colors.text.secondary};
 `

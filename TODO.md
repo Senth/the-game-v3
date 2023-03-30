@@ -6,7 +6,7 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ### Hints
 
-- [ ] Instead of getting next hint, get the ability to reveal a specific hint
+- [x] Instead of getting next hint, get the ability to reveal a specific hint
 
 ### Admin
 
