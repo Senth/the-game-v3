@@ -174,7 +174,7 @@ function AddTeam(props: { season: Season }): JSX.Element {
       score: 0,
       questIndex: 0,
       themeIndex: 0,
-      hintIndex: -1,
+      hintsRevealed: 0,
     }
 
     console.log('New team', newTeam)
