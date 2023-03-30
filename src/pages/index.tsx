@@ -1,9 +1,10 @@
-import { Game, Hint } from '@models/quest'
-import React, { useEffect } from 'react'
+import { Game } from '@models/quest'
+import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import Parser from 'react-html-parser'
 import { GamePostRequest } from '@models/api/game'
 import Stats from '@components/stats/stats'
+import Hints from './game/_hints'
 
 export default function GamePage(): JSX.Element {
   return (
@@ -15,8 +16,8 @@ export default function GamePage(): JSX.Element {
 }
 
 function GamePrepare(): JSX.Element {
-  const [fetched, setFetched] = React.useState(false)
-  const [game, setGame] = React.useState<Game>({ completed: false, score: 0 })
+  const [fetched, setFetched] = useState(false)
+  const [game, setGame] = useState<Game>({ completed: false, score: 0 })
   const now = new Date()
 
   function updateGame() {
@@ -146,85 +147,6 @@ const GameTitle = styled.h3`
 `
 
 const GameImage = styled.img`
-  width: 100%;
-`
-
-function Hints(props: { game: Game }): JSX.Element {
-  const { game } = props
-  let points = calculateWorth(game)
-
-  const hints = game.quest?.hints.filter((hint) => hint.text)
-  const nextHint = game.quest?.hints.find((hint) => !hint.text)
-
-  function revealHint() {
-    const request: GamePostRequest = {
-      unlockHint: true,
-    }
-
-    fetch('/api/game', {
-      method: 'POST',
-      body: JSON.stringify(request),
-    })
-  }
-
-  return (
-    <HintContainer>
-      <WorthInfo>Worth {points}p</WorthInfo>
-      <HintList>
-        {hints?.map((hint) => (
-          <Hint key={hint.text} hint={hint} />
-        ))}
-      </HintList>
-      {nextHint && <ShowHintButton onClick={revealHint}>Reveal Hint (-{nextHint.points}p)</ShowHintButton>}
-    </HintContainer>
-  )
-}
-
-function Hint(prop: { hint: Hint }): JSX.Element {
-  const { hint } = prop
-
-  return <HintText>{hint.text}</HintText>
-}
-
-function calculateWorth(game: Game): number {
-  let points = 0
-
-  if (game.quest) {
-    points = game.quest.points
-
-    // Decrease points for each hint
-    for (const hint of game.quest.hints) {
-      if (hint.text) {
-        points -= hint.points
-      }
-    }
-  }
-
-  return points
-}
-
-const HintContainer = styled.div``
-
-const WorthInfo = styled.h4`
-  margin-top: ${(props) => props.theme.spacing.normal};
-  margin-bottom: ${(props) => props.theme.spacing.normal};
-`
-
-const HintList = styled.ul`
-  padding: 0;
-`
-
-const HintText = styled.li`
-  list-style-type: none;
-
-  ::before {
-    content: '📜';
-    display: inline-block;
-    padding-right: ${(props) => props.theme.spacing.small};
-  }
-`
-
-const ShowHintButton = styled.button`
   width: 100%;
 `
 

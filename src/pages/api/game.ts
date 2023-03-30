@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import seasonRepo from '@repo/season'
 import teamRepo from '@repo/team'
 import { Season, Quest, Game } from '@models/quest'
-import { Team } from '@models/team'
+import { Team, teamHelper } from '@models/team'
 import { AnswerResponse, GamePostRequest } from '@models/api/game'
 
 export default withTeam(async function handler(req, res) {
@@ -90,7 +90,7 @@ function getCurrentQuest(season: Season, team: Team, filter: boolean): Quest | u
 
     // Strip out hint texts they haven't been unlocked yet
     for (let i = 0; i < quest.hints.length; i++) {
-      if (i > team.hintIndex) {
+      if (!teamHelper.isHintRevealed(team, i)) {
         delete quest.hints[i].text
       }
     }
@@ -133,8 +133,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
       if (request.answer) {
         return checkAnswer(request, res, team, season, quest)
-      } else if (request.unlockHint) {
-        return unlockHint(request, res, team, quest)
+      } else if (request.revealHint !== undefined && request.revealHint !== null) {
+        return revealHint(request, res, team, quest)
       } else {
         return res.status(400).json({ message: 'Invalid request body' })
       }
@@ -159,9 +159,14 @@ async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Tea
   }
   res.status(200).json(response)
 
-  // Check how many hints they have unlocked
+  // Check how many hints they have revealed
   let hintPoints = 0
-  for (let i = 0; i <= team.hintIndex; i++) {
+  for (let i = 0; i <= quest.hints.length; i++) {
+    // Skip hints that haven't been revealed
+    if (!teamHelper.isHintRevealed(team, i)) {
+      continue
+    }
+
     const points = quest.hints[i].points
     if (points) {
       hintPoints += quest.hints[i].points
@@ -170,7 +175,7 @@ async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Tea
 
   // Update the team score
   team.score = team.score + quest.points - hintPoints
-  team.hintIndex = -1
+  team.hintsRevealed = 0
 
   // Get the next quest
   const theme = season.themes[team.themeIndex]
@@ -189,18 +194,16 @@ async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Tea
   return
 }
 
-async function unlockHint(req: GamePostRequest, res: NextApiResponse, team: Team, quest: Quest) {
-  const nextHintIndex = team.hintIndex + 1
-
-  // Check if the hint exists
-  if (nextHintIndex >= quest.hints.length) {
+async function revealHint(req: GamePostRequest, res: NextApiResponse, team: Team, quest: Quest) {
+  // Check if the hint index is valid
+  if (req.revealHint === undefined || req.revealHint >= quest.hints.length) {
     return res.status(400).json({ message: 'Invalid hint index' })
   }
 
   res.status(200).json({})
 
   // Unlock the next hint
-  team.hintIndex = nextHintIndex
+  teamHelper.revealHint(team, req.revealHint)
 
   await teamRepo.update(team)
 }

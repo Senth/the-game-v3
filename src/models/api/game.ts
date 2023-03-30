@@ -4,5 +4,5 @@ export interface AnswerResponse {
 
 export interface GamePostRequest {
   answer?: string
-  unlockHint?: boolean
+  revealHint?: number
 }

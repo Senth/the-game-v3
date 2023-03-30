@@ -13,6 +13,14 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [ ] When looking at a quest, show the hints that have been revealed and by which team.
 - [ ] Add a nice overview of the game, what quest they are on (with a link to the quest)
       And which hints they have revealed.
+- [ ] Upload images/files for quests and serve them statically from GCP
+
+### UI/UX
+
+- [ ] Logout?
+- [ ] Forwarding
+  - [ ] When not logged in -> Login page
+  - [ ] Admin automatically forwarded to admin page
 
 ### Chat
 
