@@ -26,13 +26,15 @@ export default function Hints(props: { game: Game }): JSX.Element {
 function Hint(props: { hint: Hint; index: number }): JSX.Element {
   const { hint, index } = props
   const [isHolding, setIsHolding] = useState(false)
-  const [shouldReveal, setShouldReveal] = useState(false)
+  const [isRevealing, setIsRevealing] = useState(false)
   let holdTimer: NodeJS.Timeout
 
-  function handleTouchStart() {
+  function handleTouchStart(event: React.TouchEvent<HTMLButtonElement>) {
+    event?.preventDefault()
     setIsHolding(true)
     holdTimer = setTimeout(() => {
-      setShouldReveal(true)
+      setIsRevealing(true)
+      revealHint()
     }, REVEAL_TIME)
   }
 
@@ -41,12 +43,8 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
     clearTimeout(holdTimer)
   }
 
-  function handleClick() {
-    if (!shouldReveal) {
-      return
-    }
-
-    revealHint()
+  function handleContextMenu(event: React.MouseEvent<HTMLButtonElement>) {
+    event?.preventDefault()
   }
 
   function revealHint() {
@@ -63,10 +61,14 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
   return (
     <HintText>
       {hint.text || (
-        <RevealButton onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleClick}>
-          {isHolding && <HoldSlider onClick={handleClick} />}
-          Reveal Hint <HintPoints>(-{hint.points}p)</HintPoints>
-        </RevealButton>
+        <>
+          {!isRevealing && (
+            <RevealButton onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onContextMenu={handleContextMenu}>
+              {isHolding && <HoldSlider />}
+              Reveal Hint <HintPoints>(-{hint.points}p)</HintPoints>
+            </RevealButton>
+          )}
+        </>
       )}
     </HintText>
   )
