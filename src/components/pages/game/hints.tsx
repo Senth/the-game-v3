@@ -1,7 +1,7 @@
 import { GamePostRequest } from '@models/api/game'
 import { Game, Hint } from '@models/quest'
 import styled, { keyframes } from 'styled-components'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 const REVEAL_TIME = 2000
 
@@ -27,19 +27,19 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
   const { hint, index } = props
   const [isHolding, setIsHolding] = useState(false)
   const [isRevealing, setIsRevealing] = useState(false)
+  const isHoldingRef = useRef(false)
   let holdTimer: NodeJS.Timeout
 
   function handleTouchStart(event: React.TouchEvent<HTMLButtonElement>) {
     event?.preventDefault()
     setIsHolding(true)
-    holdTimer = setTimeout(() => {
-      setIsRevealing(true)
-      revealHint()
-    }, REVEAL_TIME)
+    isHoldingRef.current = true
+    holdTimer = setTimeout(revealHint, REVEAL_TIME)
   }
 
   function handleTouchEnd() {
     setIsHolding(false)
+    isHoldingRef.current = false
     clearTimeout(holdTimer)
   }
 
@@ -48,6 +48,11 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
   }
 
   function revealHint() {
+    if (!isHoldingRef.current) {
+      return
+    }
+
+    setIsRevealing(true)
     const request: GamePostRequest = {
       revealHint: index,
     }

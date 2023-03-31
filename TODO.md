@@ -4,10 +4,6 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ## Todo
 
-### Hints
-
-- [x] Instead of getting next hint, get the ability to reveal a specific hint
-
 ### Admin
 
 - [ ] When looking at a quest, show the hints that have been revealed and by which team.
@@ -46,3 +42,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
   - [x] Show timer and all team progress/points
 - [x] Backend for checking answer and continuing game
 - [x] Forward to next quest when one in the team got the right answer
+- [x] Instead of getting next hint, get the ability to reveal a specific hint
