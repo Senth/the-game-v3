@@ -129,6 +129,7 @@ function GameSection(props: { game: Game }): JSX.Element {
     <GameContainer>
       {quest?.displayTitle && <GameTitle>{quest.displayTitle}</GameTitle>}
       {quest?.imageUrl && <GameImage src={quest.imageUrl} />}
+      {quest?.asset && <GameAsset asset={quest.asset} />}
       {content}
       <hr />
       <Hints game={game} />
@@ -222,3 +223,20 @@ const AnswerCorrect = styled.div`
 
   animation: ${fadeOut} 1.2s ease-in-out;
 `
+
+function GameAsset(props: { asset: string }): JSX.Element {
+  const { asset } = props
+  const ext = asset.split('.').pop() || ''
+
+  if (isImage(ext)) {
+    return <GameImage src={asset} />
+  }
+
+  return <></>
+}
+
+function isImage(ext: string): boolean {
+  ext = ext.toLowerCase()
+
+  return ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif'
+}

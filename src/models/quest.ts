@@ -18,6 +18,7 @@ export interface Quest {
   displayTitle?: string
   points: number
   imageUrl?: string
+  asset?: string
   content?: string
   answer?: string
   hints: Hint[]

@@ -5,9 +5,11 @@ import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
 import EditLabel from '@components/admin/EditLabel'
 import Edit from '@components/admin/Edit'
 import EditArea from '@components/admin/EditArea'
+import EditFile from '@components/admin/EditFile'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { Quest, QuestTheme, Season } from '@models/quest'
+import { AssetResponse } from '@models/api/asset'
 
 export default function QuestPage(): JSX.Element {
   const seasons = useSeasons()
@@ -59,6 +61,35 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
   const { season, quest } = props
   const mutateSeason = useSeasonsMutate()
 
+  async function handleAssetUpload(file: File) {
+    console.log(`Uploading file: ${file.name}`)
+
+    // Upload the file
+    const formData = new FormData()
+    formData.append('file', file)
+
+    // Make a request to the server
+    fetch('/api/admin/assets', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => {
+        console.log(response)
+        if (response.status !== 200) {
+          throw new Error(`Failed to upload file: ${response.statusText}`)
+        }
+
+        return response.json()
+      })
+      .then((data: AssetResponse) => {
+        quest.asset = data.publicUrl
+        mutateSeason.update(season)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
   return (
     <>
       <Edit
@@ -101,6 +132,7 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
           mutateSeason.update(season)
         }}
       />
+      <EditFile name="Asset" value={quest.asset} onSubmit={handleAssetUpload} />
       <EditArea
         value={quest.content}
         onChange={(content) => {

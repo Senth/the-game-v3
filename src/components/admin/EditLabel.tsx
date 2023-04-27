@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React, { useState } from 'react'
+import React from 'react'
 import Edit from './Edit'
 
 export interface EditLabelProps {
@@ -17,19 +17,19 @@ function EditLabel(props: EditLabelProps): JSX.Element {
   )
 }
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   margin: ${(props) => props.theme.spacing.small} 0;
   display: flex;
   flex-direction: row;
 `
 
-const Label = styled.div`
+export const Label = styled.div`
   display: block;
   font-weight: bold;
   min-width: 150px;
 `
 
-const Value = styled.div`
+export const Value = styled.div`
   display: block;
   min-width: 200px;
   white-space: pre-wrap;

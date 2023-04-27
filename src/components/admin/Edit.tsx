@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 export interface EditProps {
   value?: string
@@ -8,14 +8,10 @@ export interface EditProps {
 
 export default function Edit(props: EditProps): JSX.Element {
   const value = props.value || ''
-  const [tempValue, setTempValue] = useState(value)
 
   const handleKeyDown = (e: React.KeyboardEvent<any>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
-      const newValue = e.currentTarget.innerText
-      props.onChange(newValue)
-      setTempValue(newValue)
       e.currentTarget.blur()
     } else if (e.key === 'Escape') {
       e.currentTarget.innerText = value
@@ -24,8 +20,8 @@ export default function Edit(props: EditProps): JSX.Element {
   }
 
   const handleBlur = (e: React.FocusEvent<any>) => {
-    if (tempValue !== e.target.innerText) {
-      e.target.innerText = value
+    if (value !== e.target.innerText) {
+      props.onChange(e.target.innerText)
     }
   }
 
@@ -36,7 +32,7 @@ export default function Edit(props: EditProps): JSX.Element {
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
     >
-      {tempValue}
+      {value}
     </props.element>
   )
 }
