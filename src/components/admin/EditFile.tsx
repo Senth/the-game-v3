@@ -42,13 +42,41 @@ function EditFile(props: EditFileProps): JSX.Element {
         </Value>
       ) : (
         <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleFileChange} />
+          <UploadButton className="button" htmlFor="asset-upload">
+            Choose File
+          </UploadButton>
+          <FileInput id="asset-upload" type="file" onChange={handleFileChange} />
           <button type="submit">Upload</button>
         </form>
       )}
     </Wrapper>
   )
 }
+
+const FileInput = styled.input`
+  width: 200px;
+  background-color: ${(props) => props.theme.colors.background};
+
+  &::file-selector-button {
+    display: none;
+  }
+`
+
+const UploadButton = styled.label`
+  filter: saturate(0.5) brightness(1);
+
+  :hover {
+    filter: saturate(0.5) brightness(1.2);
+  }
+
+  :active {
+    filter: saturate(0.5) brightness(0.8);
+  }
+
+  &::file-selector-button {
+    display: none;
+  }
+`
 
 const DeleteButton = styled.button`
   margin-left: ${(props) => props.theme.spacing.normal};

@@ -8,7 +8,7 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 - [ ] Show how the quest looks like for the team
 - [ ] Add warning icons to missing fields
-- [ ] Clear/Remove an asset
+- [ ] Ability to remove a hint
 - [ ] When looking at a quest, show the hints that have been revealed and by which team.
 - [ ] Add a nice overview of the game, what quest they are on (with a link to the quest)
       And which hints they have revealed.
@@ -28,6 +28,10 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 ### General improvements
 
 - [ ] Use Firebase for storage to automatically load updates instead of polling
+
+### Game
+
+- [ ] When a hint has 0 points, it is treated as non-existent and the team can't reveal it.
 
 ## Done
 
@@ -51,4 +55,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Forward to next quest when one in the team got the right answer
 - [x] Instead of getting next hint, get the ability to reveal a specific hint
 - [x] Upload images/files for quests and serve them statically from GCP
-- [x] Ability to remove a hint
+- [x] Clear/Remove an asset

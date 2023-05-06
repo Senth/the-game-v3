@@ -27,7 +27,7 @@ export const GlobalStyle = createGlobalStyle`
   select {
     min-width: 150px;
   }
-  button {
+  button, .button {
     color: ${theme.colors.text.primary};
     text-transform: uppercase;
     font-family: ${theme.font.family.button};
@@ -35,9 +35,11 @@ export const GlobalStyle = createGlobalStyle`
     font-size: ${theme.font.size.small};
     padding: ${theme.spacing.small} ${theme.spacing.normal};
     min-width: 150px;
+    cursor: pointer;
     border: none;
     border-radius: ${theme.spacing.small};
     background-color: ${theme.colors.primary};
+    transition: all 0.2s ease-in-out;
     :hover {
       filter: brightness(1.2);
     }
