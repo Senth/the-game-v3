@@ -74,7 +74,6 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
       body: formData,
     })
       .then((response) => {
-        console.log(response)
         if (response.status !== 200) {
           throw new Error(`Failed to upload file: ${response.statusText}`)
         }
@@ -83,6 +82,27 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
       })
       .then((data: AssetResponse) => {
         quest.asset = data.publicUrl
+        mutateSeason.update(season)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  async function handleDelete() {
+    const filename = quest.asset?.split('/').pop()
+    console.log(`Deleting asset ${filename}`)
+
+    // Make a request to the server
+    fetch(`/api/admin/assets?id=${filename}`, {
+      method: 'DELETE',
+    })
+      .then((response) => {
+        if (response.status !== 204) {
+          throw new Error(`Failed to delete file: ${response.statusText}`)
+        }
+
+        quest.asset = ''
         mutateSeason.update(season)
       })
       .catch((error) => {
@@ -132,7 +152,7 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
           mutateSeason.update(season)
         }}
       />
-      <EditFile name="Asset" value={quest.asset} onSubmit={handleAssetUpload} />
+      <EditFile name="Asset" value={quest.asset} onSubmit={handleAssetUpload} onDelete={handleDelete} />
       <EditArea
         value={quest.content}
         onChange={(content) => {

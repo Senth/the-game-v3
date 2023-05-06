@@ -1,10 +1,12 @@
 import React from 'react'
 import { Wrapper, Label, Value } from './EditLabel'
+import styled from 'styled-components'
 
 export interface EditFileProps {
   name: string
   value?: string
   onSubmit: (file: File) => void
+  onDelete?: () => void
 }
 
 function EditFile(props: EditFileProps): JSX.Element {
@@ -24,11 +26,20 @@ function EditFile(props: EditFileProps): JSX.Element {
     }
   }
 
+  let shortValue = ''
+  if (props.value) {
+    const parts = props.value.split('/')
+    shortValue = parts[parts.length - 1]
+  }
+
   return (
     <Wrapper>
       <Label>{props.name}</Label>
       {props.value ? (
-        <Value>{props.value}</Value>
+        <Value>
+          <a href={props.value}>{shortValue}</a>
+          <DeleteButton onClick={props.onDelete}>Delete</DeleteButton>
+        </Value>
       ) : (
         <form onSubmit={handleSubmit}>
           <input type="file" onChange={handleFileChange} />
@@ -38,5 +49,10 @@ function EditFile(props: EditFileProps): JSX.Element {
     </Wrapper>
   )
 }
+
+const DeleteButton = styled.button`
+  margin-left: ${(props) => props.theme.spacing.normal};
+  background-color: ${(props) => props.theme.colors.danger};
+`
 
 export default EditFile

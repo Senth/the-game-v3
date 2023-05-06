@@ -64,4 +64,13 @@ export const GlobalStyle = createGlobalStyle`
       cursor: pointer;
     }
   }
+  a {
+    color: ${theme.colors.primary};
+    :hover {
+      filter: brightness(1.2);
+    }
+    :active {
+      filter: brightness(0.9);
+    }
+  }
 `

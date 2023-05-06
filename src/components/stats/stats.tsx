@@ -14,6 +14,9 @@ export default function StatsHeader(): JSX.Element {
   function updateStats() {
     fetch('/api/stats')
       .then((response) => {
+        if (response.status === 404) {
+          return stats
+        }
         if (response.status !== 200) {
           throw new Error('Failed to fetch stats')
         }
@@ -21,8 +24,10 @@ export default function StatsHeader(): JSX.Element {
       })
       .then((stats) => {
         // Fix dates
-        stats.start = new Date(stats.start)
-        stats.end = new Date(stats.end)
+        if (typeof stats.start === 'string') {
+          stats.start = new Date(stats.start)
+          stats.end = new Date(stats.end)
+        }
         setStats(stats)
       })
       .catch((err) => {
@@ -37,12 +42,16 @@ export default function StatsHeader(): JSX.Element {
     }
   })
 
+  useEffect(() => {
+    updateStats()
+  }, [])
+
   const [elapsed, remaining, percentage] = calculateTime(stats.start, stats.end)
 
   return (
     <Wrapper>
       <LineInfo left={elapsed} percentage={percentage} right={remaining} color={theme.colors.statusbar.time} />
-      {stats.teams.map((team) => {
+      {stats.teams?.map((team) => {
         const percentage = Math.round((team.completed / stats.totalQuests) * 100)
         const completed = `(${team.completed}/${stats.totalQuests})`
         return (

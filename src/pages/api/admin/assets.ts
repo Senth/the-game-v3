@@ -4,12 +4,15 @@ import appConfig from '@config'
 import { Storage } from '@google-cloud/storage'
 import { AssetResponse } from '@models/api/asset'
 import crypto from 'crypto'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 export default withAdmin(async function handler(req, res) {
   const { method } = req
   switch (method) {
     case 'POST':
       return post(req, res)
+    case 'DELETE':
+      return del(req, res)
     default:
       return res.status(405).json({ message: 'Method not allowed' })
   }
@@ -20,6 +23,7 @@ const upload = multer({
 })
 
 const storage = new Storage()
+const bucket = storage.bucket(appConfig.bucketName)
 
 async function post(req: any, res: any) {
   // Read asset from file upload
@@ -36,7 +40,6 @@ async function post(req: any, res: any) {
     const ext = filename.split('.').pop()
     const randomFilename = crypto.randomUUID() + '.' + ext
 
-    const bucket = storage.bucket(appConfig.bucketName)
     const remoteFile = bucket.file(randomFilename)
     const stream = remoteFile.createWriteStream()
     stream.write(file.buffer, (error) => {
@@ -64,8 +67,27 @@ async function post(req: any, res: any) {
       })
   })
 
-  const something = true
   return
+}
+
+async function del(req: NextApiRequest, res: NextApiResponse) {
+  const { id } = req.query
+
+  if (typeof id !== 'string') {
+    return res.status(400).json({ message: 'Invalid query, missing id param' })
+  }
+
+  const file = bucket.file(id)
+
+  return file
+    .delete()
+    .then(() => {
+      res.status(204).send('')
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ message: 'Internal server error' })
+    })
 }
 
 export const config = {

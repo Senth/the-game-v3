@@ -2,7 +2,7 @@ export const theme = {
   colors: {
     primary: '#1c7dc8',
     secondary: '#304ffe',
-    error: '#2d476b',
+    danger: '#d50000',
     border: {
       wrapper: '#304ffe',
       input: '#8c9eff',

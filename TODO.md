@@ -6,10 +6,13 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ### Admin
 
+- [ ] Show how the quest looks like for the team
+- [ ] Add warning icons to missing fields
+- [ ] Clear/Remove an asset
 - [ ] When looking at a quest, show the hints that have been revealed and by which team.
 - [ ] Add a nice overview of the game, what quest they are on (with a link to the quest)
       And which hints they have revealed.
-- [ ] Upload images/files for quests and serve them statically from GCP
+- [ ] Add/Remove minutes to the end time after it has been started
 
 ### UI/UX
 
@@ -21,6 +24,10 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 ### Chat
 
 - [ ] Add a chat to the game
+
+### General improvements
+
+- [ ] Use Firebase for storage to automatically load updates instead of polling
 
 ## Done
 
@@ -43,3 +50,5 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Backend for checking answer and continuing game
 - [x] Forward to next quest when one in the team got the right answer
 - [x] Instead of getting next hint, get the ability to reveal a specific hint
+- [x] Upload images/files for quests and serve them statically from GCP
+- [x] Ability to remove a hint
