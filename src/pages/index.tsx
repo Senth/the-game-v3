@@ -5,6 +5,7 @@ import Parser from 'react-html-parser'
 import { GamePostRequest } from '@models/api/game'
 import Stats from '@components/stats/stats'
 import Hints from '@components/pages/game/hints'
+import { NextApiResponse } from 'next'
 
 export default function GamePage(): JSX.Element {
   return (
@@ -22,7 +23,15 @@ function GamePrepare(): JSX.Element {
 
   function updateGame() {
     fetch('/api/game')
-      .then((response) => response.json())
+      .then((response) => {
+        // User not logged in, forward to login page
+        if (response.status === 401) {
+          window.location.href = '/login'
+        } else if (response.status !== 200) {
+          throw new Error('Failed to fetch game')
+        }
+        return response.json()
+      })
       .then((game) => {
         // Fix dates
         if (game.start) {
