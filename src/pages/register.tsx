@@ -1,45 +1,61 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { LoginResponse, LoginTypes } from '@models/api/login'
 
-export default function LoginPage(): JSX.Element {
-  const [team, setTeam] = useState('')
+export default function RegisterPage(): JSX.Element {
+  const [name, setName] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        body: JSON.stringify({ team, password }),
-      })
-      if (response.ok) {
-        const loginResponse: LoginResponse = await response.json()
-        if (loginResponse.type === LoginTypes.USER) {
-          router.push('/admin/seasons')
-        } else {
-          router.push('/')
-        }
-      } else {
-        setError('Invalid username or password')
-      }
-    } catch (error) {
-      setError('An error occurred while logging in')
+  async function handleRegister() {
+    // No empty fields
+    if (!name || !password || !confirmPassword) {
+      setError('Please fill out all fields')
+      return
     }
+
+    // Make sure the passwords match
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
+    const response = fetch('/api/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, password }),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          router.push('/login')
+        } else {
+          return response.json()
+        }
+      })
+      .then((data) => {
+        console.log(data)
+        if (data && data.message) {
+          setError(data.message)
+        } else {
+          setError('Something went wrong')
+        }
+      })
+      .catch(() => {
+        setError('Something went wrong')
+      })
   }
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      handleLogin()
+      handleRegister()
     }
   }
 
   return (
     <PageContainer>
       <LoginContainer>
-        <Title>Login</Title>
+        <Title>Register</Title>
         {error && <ErrorMessage>{error}</ErrorMessage>}
         <HR />
         <Form>
@@ -47,8 +63,8 @@ export default function LoginPage(): JSX.Element {
             <InputLabel>Team</InputLabel>
             <Input
               type="text"
-              value={team}
-              onChange={(event) => setTeam(event.target.value)}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               placeholder="Enter your team"
             />
           </InputContainer>
@@ -62,14 +78,17 @@ export default function LoginPage(): JSX.Element {
               placeholder="Enter your password"
             />
           </InputContainer>
-          <LoginButton onClick={handleLogin}>Login</LoginButton>
-          <RegisterButton
-            onClick={() => {
-              router.push('/register')
-            }}
-          >
-            Register
-          </RegisterButton>
+          <InputContainer>
+            <InputLabel>Confirm Password</InputLabel>
+            <Input
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              onKeyDown={handleKeyPress}
+              placeholder="Confirm your password"
+            />
+          </InputContainer>
+          <RegisterButton onClick={handleRegister}>Register</RegisterButton>
         </Form>
       </LoginContainer>
     </PageContainer>
@@ -124,20 +143,10 @@ const Input = styled.input`
   margin-top: ${(props) => props.theme.spacing.tiny};
 `
 
-const LoginButton = styled.button`
-  width: 100%;
-  font-weight: bold;
-  background-color: ${(props) => props.theme.colors.primary};
-  color: ${(props) => props.theme.colors.text.primary};
-  font-size: ${(props) => props.theme.font.size.body};
-`
-
 const RegisterButton = styled.button`
   width: 100%;
   font-weight: bold;
-  margin-top: ${(props) => props.theme.spacing.normal};
-  background: none;
-  border: 1px solid ${(props) => props.theme.colors.primary};
+  background-color: ${(props) => props.theme.colors.primary};
   color: ${(props) => props.theme.colors.text.primary};
   font-size: ${(props) => props.theme.font.size.body};
 `
