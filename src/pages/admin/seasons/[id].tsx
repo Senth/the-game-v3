@@ -131,17 +131,19 @@ function AddSection(props: { season: Season }): JSX.Element {
           <Input type="text" id="theme" value={themeTitle} onChange={(e) => setThemeTitle(e.target.value)} />
         </form>
         {season.themes.length > 0 && (
-          <form onSubmit={addQuest}>
-            <Label htmlFor="quest">Quest</Label>
-            <Input type="text" id="quest" value={questTitle} onChange={(e) => setQuestTitle(e.target.value)} />
-            <select value={themeIndex} onChange={(e) => setThemeIndex(Number(e.target.value))}>
-              {season.themes.map((theme: QuestTheme, index: number) => (
-                <option key={index} value={index}>
-                  {theme.title}
-                </option>
-              ))}
-            </select>
-          </form>
+          <>
+            <form onSubmit={addQuest}>
+              <Label htmlFor="quest">Quest</Label>
+              <Select value={themeIndex} onChange={(e) => setThemeIndex(Number(e.target.value))}>
+                {season.themes.map((theme: QuestTheme, index: number) => (
+                  <option key={index} value={index}>
+                    {theme.title}
+                  </option>
+                ))}
+              </Select>
+              <Input type="text" id="quest" value={questTitle} onChange={(e) => setQuestTitle(e.target.value)} />
+            </form>
+          </>
         )}
       </p>
     </Section>
@@ -155,6 +157,15 @@ const Label = styled.label`
 const Input = styled.input`
   display: inline-block;
   margin: ${(props) => props.theme.spacing.small};
+`
+
+const Select = styled.select`
+  display: inline-block;
+  margin: ${(props) => props.theme.spacing.small};
+`
+
+const MultilineForm = styled.form`
+  margin-left: 0px;
 `
 
 function AddTeam(props: { season: Season }): JSX.Element {
@@ -205,7 +216,7 @@ function AddTeam(props: { season: Season }): JSX.Element {
   return (
     <p>
       <form onSubmit={submit}>
-        New Team:
+        <Label htmlFor="team">New team</Label>
         <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
         <Input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Input type="submit" value="Add" />
