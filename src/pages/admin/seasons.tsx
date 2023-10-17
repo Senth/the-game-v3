@@ -32,6 +32,7 @@ function Seasons(): JSX.Element {
               <th>Length</th>
               <th>Start</th>
               <th>End</th>
+              <th>Reset</th>
             </tr>
           </thead>
           <tbody>
@@ -46,6 +47,7 @@ function Seasons(): JSX.Element {
                 <td>{season.length}</td>
                 <td>{season.start ? season.start.toString() : <StartButton season={season} />}</td>
                 <td>{season.end ? season.end.toString() : ''}</td>
+                <td>{season.start ? <ResetButton season={season} /> : ''}</td>
               </tr>
             ))}
           </tbody>
@@ -86,6 +88,24 @@ function StartButton(prop: { season: Season }): JSX.Element {
   }
 
   return <button onClick={startSeason}>Start</button>
+}
+
+function ResetButton(prop: { season: Season }): JSX.Element {
+  const { season } = prop
+  const mutateSeason = useSeasonsMutate()
+
+  function resetSeason(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation()
+    console.log('reset season')
+
+    // Reset start and end times
+    season.start = undefined
+    season.end = undefined
+
+    mutateSeason.update(season)
+  }
+
+  return <button onClick={resetSeason}>Reset</button>
 }
 
 function NewSeason(): JSX.Element {
