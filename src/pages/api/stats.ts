@@ -69,7 +69,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     })
     .catch((err) => {
       if (err instanceof Status) {
-        return res.status(err.code).json({ message: err.text })
+        return res.status(200).json({})
       } else {
         return res.status(500).json({ message: 'Internal Server Error' })
       }

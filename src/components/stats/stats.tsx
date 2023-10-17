@@ -44,7 +44,11 @@ export default function StatsHeader(): JSX.Element {
 
   useEffect(() => {
     updateStats()
-  }, [])
+  })
+
+  if (!stats.teams?.length) {
+    return <></>
+  }
 
   const [elapsed, remaining, percentage] = calculateTime(stats.start, stats.end)
 
