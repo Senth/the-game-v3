@@ -1,5 +1,5 @@
 import { GamePostRequest } from '@models/api/game'
-import { Game, Hint } from '@models/quest'
+import { Game, Hint as HintModel } from '@models/quest'
 import styled, { keyframes } from 'styled-components'
 import React, { useRef, useState } from 'react'
 
@@ -23,7 +23,7 @@ export default function Hints(props: { game: Game }): JSX.Element {
   )
 }
 
-function Hint(props: { hint: Hint; index: number }): JSX.Element {
+function Hint(props: { hint: HintModel; index: number }): JSX.Element {
   const { hint, index } = props
   const [isHolding, setIsHolding] = useState(false)
   const [isRevealing, setIsRevealing] = useState(false)
@@ -124,7 +124,7 @@ const HintText = styled.li`
   font-size: ${(props) => props.theme.font.size.small};
   margin: ${(props) => props.theme.spacing.small} 0;
 
-  ::before {
+  &::before {
     content: '📜';
     font-size: ${(props) => props.theme.font.size.normal};
     padding-right: ${(props) => props.theme.spacing.small};

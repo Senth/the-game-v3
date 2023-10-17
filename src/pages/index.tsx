@@ -1,3 +1,5 @@
+'use client'
+
 import { Game } from '@models/quest'
 import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
@@ -5,7 +7,6 @@ import Parser from 'react-html-parser'
 import { GamePostRequest } from '@models/api/game'
 import Stats from '@components/stats/stats'
 import Hints from '@components/pages/game/hints'
-import { NextApiResponse } from 'next'
 
 export default function GamePage(): JSX.Element {
   return (

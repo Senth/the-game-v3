@@ -137,11 +137,9 @@ function NewSeason(): JSX.Element {
   }
 
   return (
-    <p>
-      <form onSubmit={submit}>
-        New Season:
-        <Input type="text" placeholder="Season" value={season} onChange={(e) => setSeason(e.target.value)} />
-      </form>
-    </p>
+    <form onSubmit={submit}>
+      New Season:
+      <Input type="text" placeholder="Season" value={season} onChange={(e) => setSeason(e.target.value)} />
+    </form>
   )
 }

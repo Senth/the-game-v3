@@ -214,13 +214,11 @@ function AddTeam(props: { season: Season }): JSX.Element {
   }
 
   return (
-    <p>
-      <form onSubmit={submit}>
-        <Label htmlFor="team">New team</Label>
-        <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <Input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <Input type="submit" value="Add" />
-      </form>
-    </p>
+    <form onSubmit={submit}>
+      <Label htmlFor="team">New team</Label>
+      <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+      <Input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input type="submit" value="Add" />
+    </form>
   )
 }

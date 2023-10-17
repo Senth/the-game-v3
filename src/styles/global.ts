@@ -40,10 +40,10 @@ export const GlobalStyle = createGlobalStyle`
     border-radius: ${theme.spacing.small};
     background-color: ${theme.colors.primary};
     transition: all 0.2s ease-in-out;
-    :hover {
+    &:hover {
       filter: brightness(1.2);
     }
-    :active {
+    &:active {
       filter: brightness(0.9);
     }
   }
@@ -61,17 +61,15 @@ export const GlobalStyle = createGlobalStyle`
     border-top: 1px solid ${theme.colors.border.wrapper};
   }
   tbody tr:hover {
-    :hover {
-      background-color: ${theme.colors.background.z1};
-      cursor: pointer;
-    }
+    background-color: ${theme.colors.background.z1};
+    cursor: pointer;
   }
   a {
     color: ${theme.colors.primary};
-    :hover {
+    &:hover {
       filter: brightness(1.2);
     }
-    :active {
+    &:active {
       filter: brightness(0.9);
     }
   }
