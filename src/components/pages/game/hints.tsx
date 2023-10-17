@@ -30,7 +30,9 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
   const isHoldingRef = useRef(false)
   let holdTimer: NodeJS.Timeout
 
-  function handleTouchStart(event: React.TouchEvent<HTMLButtonElement>) {
+  function handleTouchStart(
+    event: React.TouchEvent<HTMLButtonElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
     event?.preventDefault()
     setIsHolding(true)
     isHoldingRef.current = true
@@ -70,7 +72,13 @@ function Hint(props: { hint: Hint; index: number }): JSX.Element {
           {isRevealing ? (
             <Fetching>Fetching...</Fetching>
           ) : (
-            <RevealButton onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onContextMenu={handleContextMenu}>
+            <RevealButton
+              onTouchStart={handleTouchStart}
+              onMouseDown={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+              onMouseUp={handleTouchEnd}
+              onContextMenu={handleContextMenu}
+            >
               {isHolding && <HoldSlider />}
               Reveal Hint <HintPoints>(-{hint.points}p)</HintPoints>
             </RevealButton>
