@@ -89,7 +89,8 @@ async function getActiveSeason(): Promise<Season | undefined> {
           continue
         }
 
-        if (season.start.getTime() < Date.now() && season.end.getTime() > Date.now()) {
+        // Check if it will start within the next minute and is still running
+        if (season.start.getTime() < Date.now() + 60000 && season.end.getTime() > Date.now()) {
           return season
         }
       }

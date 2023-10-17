@@ -46,7 +46,7 @@ function GamePrepare(): JSX.Element {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(updateGame, 1000)
+    const intervalId = setInterval(updateGame, 250)
     return () => {
       clearInterval(intervalId)
     }
