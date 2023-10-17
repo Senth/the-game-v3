@@ -27,6 +27,18 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   // Get the current team information from the database
   team = (await teamRepo.getTeam(team.name)) as Team
 
+  // Team has not been added to a season yet
+  if (!team.seasonId) {
+    const activeSeason = await getActiveSeason()
+    if (!activeSeason) {
+      return res.status(200).json({})
+    }
+
+    // Found active season, add team to it
+    team.seasonId = activeSeason.id!
+    teamRepo.update(team)
+  }
+
   // Get the season for the team
   return seasonRepo.get(team.seasonId).then((season) => {
     // Check and make sure the season exists
@@ -59,6 +71,29 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json(response)
   })
+}
+
+async function getActiveSeason(): Promise<Season | undefined> {
+  // Get all seasons
+  return seasonRepo
+    .getAll()
+    .then((seasons) => {
+      if (!seasons) {
+        return []
+      }
+      return seasons
+    })
+    .then((seasons) => {
+      for (const season of seasons) {
+        if (!season.start || !season.end) {
+          continue
+        }
+
+        if (season.start.getTime() < Date.now() && season.end.getTime() > Date.now()) {
+          return season
+        }
+      }
+    })
 }
 
 function hasSeasonStarted(season: Season): boolean {

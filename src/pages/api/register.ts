@@ -33,6 +33,13 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: 'Team name already exists' })
   }
 
+  // Add data to the team
+  team.seasonId = ''
+  team.score = 0
+  team.questIndex = 0
+  team.themeIndex = 0
+  team.hintsRevealed = 0
+
   return teamRepo
     .add(team)
     .then((team) => {

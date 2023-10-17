@@ -67,8 +67,10 @@ function StartButton(prop: { season: Season }): JSX.Element {
 
   function startSeason(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
+    console.log('start season')
 
     if (!season.length) {
+      console.log('No length for the season')
       // TODO Error message
       return
     }
