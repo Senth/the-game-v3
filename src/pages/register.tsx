@@ -22,7 +22,7 @@ export default function RegisterPage(): JSX.Element {
       return
     }
 
-    const response = fetch('/api/register', {
+    fetch('/api/register', {
       method: 'POST',
       body: JSON.stringify({ name, password }),
     })
