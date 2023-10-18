@@ -13,17 +13,15 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [ ] Add a nice overview of the game, what quest they are on (with a link to the quest)
       And which hints they have revealed.
 - [ ] Add/Remove minutes to the end time after it has been started
+- [ ] See teams bound to a season and ability to delete them, for testing purposes
 
 ### UI/UX
 
-- [ ] Logout?
-- [ ] Forwarding
-  - [ ] When not logged in -> Login page
-  - [ ] Admin automatically forwarded to admin page
+- [ ] Submit button for quests
 
 ### Chat
 
-- [ ] Add a chat to the game
+- [ ] Check how to add voice chat to the game
 
 ### General improvements
 
@@ -32,6 +30,8 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 ### Game
 
 - [ ] When a hint has 0 points, it is treated as non-existent and the team can't reveal it.
+- [ ] First player to complete the game gets a bonus. This depends on the total number of players
+- [ ] Randomize the order of themes and quests per team
 
 ## Done
 
@@ -56,3 +56,7 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Instead of getting next hint, get the ability to reveal a specific hint
 - [x] Upload images/files for quests and serve them statically from GCP
 - [x] Clear/Remove an asset
+- [x] Logout
+- [x] Forwarding
+  - [x] When not logged in -> Login page
+  - [x] Admin automatically forwarded to admin page
