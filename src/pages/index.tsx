@@ -7,6 +7,7 @@ import Parser from 'react-html-parser'
 import { GamePostRequest } from '@models/api/game'
 import Stats from '@components/stats/stats'
 import Hints from '@components/pages/game/hints'
+import Icons from '@components/icons/material'
 
 export default function GamePage(): JSX.Element {
   return (
@@ -162,9 +163,11 @@ const GameImage = styled.img`
 `
 
 function Answer(): JSX.Element {
-  const [answer, setAnswer] = React.useState('')
-  const [wrong, setWrong] = React.useState(false)
-  const [correct, setCorrect] = React.useState(false)
+  const [answer, setAnswer] = useState('')
+  const [wrong, setWrong] = useState(false)
+  const [correct, setCorrect] = useState(false)
+  const [key, setKey] = useState(0)
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null)
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -180,12 +183,16 @@ function Answer(): JSX.Element {
       .then((response) => response.json())
       .then((response) => {
         setAnswer('')
+        setKey((prevKey) => prevKey + 1)
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
         if (response && response.correct) {
           setCorrect(true)
-          setTimeout(() => setCorrect(false), 1000)
+          setTimeoutId(setTimeout(() => setCorrect(false), 3000))
         } else {
           setWrong(true)
-          setTimeout(() => setWrong(false), 1000)
+          setTimeoutId(setTimeout(() => setWrong(false), 4000))
         }
       })
   }
@@ -193,24 +200,36 @@ function Answer(): JSX.Element {
   return (
     <AnswerContainer>
       <AnswerTitle>Answer</AnswerTitle>
-      <form onSubmit={submit}>
+      <AnswerForm onSubmit={submit}>
         <AnswerInput value={answer} onChange={(e) => setAnswer(e.target.value)} />
-      </form>
-      {wrong && <AnswerWrong>Wrong answer!</AnswerWrong>}
-      {correct && <AnswerCorrect>correct answer!</AnswerCorrect>}
+        <AnswerSendButton type="submit">{Icons.chevronRight}</AnswerSendButton>
+      </AnswerForm>
+      {wrong && <AnswerWrong key={key}>Wrong answer!</AnswerWrong>}
+      {correct && <AnswerCorrect key={key}>correct answer!</AnswerCorrect>}
     </AnswerContainer>
   )
 }
+
+const AnswerContainer = styled.div``
 
 const AnswerTitle = styled.h4`
   margin-top: ${(props) => props.theme.spacing.normal};
   margin-bottom: ${(props) => props.theme.spacing.small};
 `
 
-const AnswerContainer = styled.div``
+const AnswerForm = styled.form`
+  display: flex;
+  flex-direction: row;
+`
 
 const AnswerInput = styled.input`
-  width: calc(100% - ${(props) => props.theme.spacing.normal});
+  flex: 1 1 auto;
+`
+
+const AnswerSendButton = styled.button`
+  flex: 0 0 auto;
+  min-width: 50px;
+  margin-left: ${(props) => props.theme.spacing.small};
 `
 
 const fadeOut = keyframes`
@@ -223,7 +242,7 @@ const AnswerWrong = styled.div`
   font-size: ${(props) => props.theme.font.size.small};
   margin-top: ${(props) => props.theme.spacing.small};
 
-  animation: ${fadeOut} 1.2s ease-in-out;
+  animation: ${fadeOut} 4.2s ease-in-out;
 `
 
 const AnswerCorrect = styled.div`
@@ -231,7 +250,7 @@ const AnswerCorrect = styled.div`
   font-size: ${(props) => props.theme.font.size.small};
   margin-top: ${(props) => props.theme.spacing.small};
 
-  animation: ${fadeOut} 1.2s ease-in-out;
+  animation: ${fadeOut} 3.2s ease-in-out;
 `
 
 function GameAsset(props: { asset: string }): JSX.Element {

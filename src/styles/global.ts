@@ -73,4 +73,13 @@ export const GlobalStyle = createGlobalStyle`
       filter: brightness(0.9);
     }
   }
+  
+  // Material Icons
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
 `

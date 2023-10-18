@@ -17,8 +17,6 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ### UI/UX
 
-- [ ] Submit button for quests
-
 ### Chat
 
 - [ ] Check how to add voice chat to the game
@@ -60,3 +58,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - [x] Forwarding
   - [x] When not logged in -> Login page
   - [x] Admin automatically forwarded to admin page
+- [x] Submit button for quests
