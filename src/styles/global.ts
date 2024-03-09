@@ -25,7 +25,7 @@ export const GlobalStyle = createGlobalStyle`
     font-size: ${theme.font.size.body};
   }
   select {
-    min-width: 150px;
+    min-width: 200px;
   }
   button, .button {
     color: ${theme.colors.text.primary};
@@ -73,7 +73,7 @@ export const GlobalStyle = createGlobalStyle`
       filter: brightness(0.9);
     }
   }
-  
+
   // Material Icons
   .material-symbols-outlined {
     font-variation-settings:

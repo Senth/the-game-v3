@@ -23,10 +23,12 @@ export const Wrapper = styled.div`
   flex-direction: row;
 `
 
-export const Label = styled.div`
-  display: block;
+export const Label = styled.label`
+  display: flex;
   font-weight: bold;
   min-width: 150px;
+	min-height: 30px;
+	align-items: center;
 `
 
 export const Value = styled.div`

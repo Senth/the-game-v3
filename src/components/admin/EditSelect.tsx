@@ -18,14 +18,14 @@ export default function EditSelect(props: EditSelectProps): JSX.Element {
 
 	return (
 		<Wrapper>
-		<Label>{props.name}</Label>
-		<select value={selected} onBlur={handleBlur} onChange={(e) => onChange(e.target.value)}>
-			{options.map((option) => (
-				<option key={option} value={option}>
-					{option}
-				</option>
-			))}
-		</select>
+			<Label>{props.name}</Label>
+			<select value={selected} onBlur={handleBlur} onChange={(e) => onChange(e.target.value)}>
+				{options.map((option) => (
+					<option key={option} value={option}>
+						{option}
+					</option>
+				))}
+			</select>
 		</Wrapper>
 	)
 }
