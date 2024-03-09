@@ -1,16 +1,20 @@
+import { QuestId, SeasonId } from "./quest"
+
+export type TeamId = string
+
 export interface Team {
   name: string
   password?: string
-  seasonId: string
+  seasonId: SeasonId
   score: number
-  themeIndex: number
+  questOrder: QuestId[]
   questIndex: number
   hintsRevealed: number
 }
 
 export interface Guess {
-  teamId: string
-  questId: string
+  teamId: TeamId
+  questId: QuestId
   guess: string
 }
 

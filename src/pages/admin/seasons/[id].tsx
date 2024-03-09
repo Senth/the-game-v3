@@ -2,21 +2,33 @@ import React from "react"
 import AdminPage from "@components/pages/Admin"
 import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
 import { useRouter } from "next/router"
-import { Quest, QuestTheme, Season } from "@models/quest"
+import { Order, Quest, QuestId, QuestTheme, Season, newSeason } from "@models/quest"
 import EditLabel from "@components/admin/EditLabel"
 import styled from "styled-components"
 import Edit from "@components/admin/Edit"
 import { Team } from "@models/team"
+import EditSelect from "@components/admin/EditSelect"
+import { randomUUID } from "crypto"
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
   const seasons = useSeasons()
   const mutateSeason = useSeasonsMutate()
 
+	if (seasons.isLoading) {
+		return <AdminPage><p>Loading...</p></AdminPage>
+	}
+	if (seasons.error) {
+		return <AdminPage><p>Error</p></AdminPage>
+	}
+	if (!seasons.data) {
+		return <AdminPage><p>No data</p></AdminPage>
+	}
+	const data = seasons.data
+
   // Find the season
   const { id } = router.query
-  const season = seasons.data?.find((season) => season.id === id) || { title: "", themes: [] }
-  console.log("Season", season)
+  const season: Season = data.find((season) => season.id === id) ||newSeason()
 
   function onTitleChange(value: string) {
     const newSeason: Season = {
@@ -34,19 +46,22 @@ export default function SeasonPage(): JSX.Element {
     mutateSeason.update(newSeason)
   }
 
+	function onOrderChange(value: string) {
+		const newSeason: Season = {
+			...season,
+			order: value as Order,
+		}
+		mutateSeason.update(newSeason)
+	}
+
   return (
     <AdminPage>
-      {seasons.isLoading && <p>Loading...</p>}
-      {seasons.error && <p>Error</p>}
-      {season && (
-        <>
-          <Edit element="h2" value={season.title} onChange={onTitleChange} />
-          <EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
-          <Themes season={season} />
-          <AddSection season={season} />
-          <AddTeam season={season} />
-        </>
-      )}
+			<Edit element="h2" value={season.title} onChange={onTitleChange} />
+			<EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
+			<EditSelect name="Order" selected={season.order} options={Object.values(Order)} onChange={onOrderChange} />
+			<Themes season={season} />
+			<AddSection season={season} />
+			<AddTeam season={season} />
     </AdminPage>
   )
 }
@@ -105,7 +120,8 @@ function AddSection(props: { season: Season }): JSX.Element {
   function addTheme(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    season.themes.push({ title: themeTitle, quests: [] })
+		const random = season.order === Order.randomAll || season.order === Order.randomTheme
+    season.themes.push({ title: themeTitle, quests: [], random: random})
 
     seasonsMutate.update(season).then(() => {
       setThemeTitle("")
@@ -115,7 +131,13 @@ function AddSection(props: { season: Season }): JSX.Element {
   function addQuest(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
-    season.themes[themeIndex].quests.push({ title: questTitle, points: 0, hints: [] })
+		const quest: Quest = {
+			id: randomUUID() as QuestId,
+			title: questTitle,
+			points: 0,
+			hints: [],
+		}
+    season.themes[themeIndex].quests.push(quest)
 
     seasonsMutate.update(season).then(() => {
       setQuestTitle("")
@@ -164,10 +186,6 @@ const Select = styled.select`
   margin: ${(props) => props.theme.spacing.small};
 `
 
-const MultilineForm = styled.form`
-  margin-left: 0px;
-`
-
 function AddTeam(props: { season: Season }): JSX.Element {
   const { season } = props
 
@@ -183,8 +201,8 @@ function AddTeam(props: { season: Season }): JSX.Element {
       password: password,
       seasonId: season.id || "",
       score: 0,
+			questOrder: [],
       questIndex: 0,
-      themeIndex: 0,
       hintsRevealed: 0,
     }
 
