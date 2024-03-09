@@ -1,12 +1,12 @@
-import { IronSession } from 'iron-session'
-import { withSessionApi } from '@utils/session'
+import { IronSession } from "iron-session"
+import { withSessionApi } from "@utils/session"
 
 export default withSessionApi(async function loginRoute(req, res) {
   tryLogoutUser(req.session).then((status) => {
     if (status === 200) {
-      res.status(200).json({ message: 'Logged out' })
+      res.status(200).json({ message: "Logged out" })
     } else {
-      res.status(status).json({ message: 'Internal server error' })
+      res.status(status).json({ message: "Internal server error" })
     }
   })
 })

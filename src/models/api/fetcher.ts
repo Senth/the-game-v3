@@ -1,4 +1,4 @@
-import { KeyedMutator } from 'swr'
+import { KeyedMutator } from "swr"
 
 export interface Fetcher<T> {
   data: T | undefined

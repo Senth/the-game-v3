@@ -1,17 +1,17 @@
-'use client'
+"use client"
 
-import React, { useState } from 'react'
+import React, { useState } from "react"
 
-import AdminPage from '@components/pages/Admin'
-import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
-import EditLabel from '@components/admin/EditLabel'
-import Edit from '@components/admin/Edit'
-import EditArea from '@components/admin/EditArea'
-import EditFile from '@components/admin/EditFile'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
-import { Quest, QuestTheme, Season } from '@models/quest'
-import { AssetResponse } from '@models/api/asset'
+import AdminPage from "@components/pages/Admin"
+import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
+import EditLabel from "@components/admin/EditLabel"
+import Edit from "@components/admin/Edit"
+import EditArea from "@components/admin/EditArea"
+import EditFile from "@components/admin/EditFile"
+import styled from "styled-components"
+import { useRouter } from "next/router"
+import { Quest, QuestTheme, Season } from "@models/quest"
+import { AssetResponse } from "@models/api/asset"
 
 export default function QuestPage(): JSX.Element {
   const seasons = useSeasons()
@@ -32,7 +32,7 @@ export default function QuestPage(): JSX.Element {
   }
 
   // Find the season
-  const season = seasons.data?.find((season) => season.id === id) || { title: '', themes: [] }
+  const season = seasons.data?.find((season) => season.id === id) || { title: "", themes: [] }
 
   let theme: QuestTheme | undefined
   if (season.themes.length <= themeIndex) {
@@ -68,11 +68,11 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
 
     // Upload the file
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append("file", file)
 
     // Make a request to the server
-    fetch('/api/admin/assets', {
-      method: 'POST',
+    fetch("/api/admin/assets", {
+      method: "POST",
       body: formData,
     })
       .then((response) => {
@@ -92,19 +92,19 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
   }
 
   async function handleDelete() {
-    const filename = quest.asset?.split('/').pop()
+    const filename = quest.asset?.split("/").pop()
     console.log(`Deleting asset ${filename}`)
 
     // Make a request to the server
     fetch(`/api/admin/assets?id=${filename}`, {
-      method: 'DELETE',
+      method: "DELETE",
     })
       .then((response) => {
         if (response.status !== 204) {
           throw new Error(`Failed to delete file: ${response.statusText}`)
         }
 
-        quest.asset = ''
+        quest.asset = ""
         mutateSeason.update(season)
       })
       .catch((error) => {
@@ -180,18 +180,18 @@ function Hints(props: { season: Season; quest: Quest }): JSX.Element {
   const [fromIndex, setFromIndex] = useState(-1)
 
   function handleDragStart(e: React.DragEvent<HTMLTableRowElement>, index: number): void {
-    e.dataTransfer.setData('text/plain', e.currentTarget.id)
+    e.dataTransfer.setData("text/plain", e.currentTarget.id)
     setFromIndex(index)
   }
 
   function handleDragOver(e: React.DragEvent<HTMLTableRowElement>): void {
     e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
+    e.dataTransfer.dropEffect = "move"
   }
 
   function handleDrop(e: React.DragEvent<HTMLTableRowElement>, index: number): void {
     e.preventDefault()
-    console.log('Drop', fromIndex, index)
+    console.log("Drop", fromIndex, index)
     const moveRow = quest.hints[fromIndex]
     quest.hints.splice(fromIndex, 1)
     quest.hints.splice(index, 0, moveRow)
@@ -240,7 +240,7 @@ function Hints(props: { season: Season; quest: Quest }): JSX.Element {
       </table>
       <AddHintButton
         onClick={() => {
-          quest.hints.push({ text: 'New', points: 0 })
+          quest.hints.push({ text: "New", points: 0 })
           mutateSeason.update(season)
         }}
       >

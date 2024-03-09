@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: "standalone",
   reactStrictMode: true,
   eslint: {
-    dirs: ['src'],
+    dirs: ["src"],
   },
   compiler: {
     styledComponents: true,

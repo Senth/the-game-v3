@@ -1,6 +1,6 @@
-import React from 'react'
-import { Wrapper, Label, Value } from './EditLabel'
-import styled from 'styled-components'
+import React from "react"
+import { Wrapper, Label, Value } from "./EditLabel"
+import styled from "styled-components"
 
 export interface EditFileProps {
   name: string
@@ -26,9 +26,9 @@ function EditFile(props: EditFileProps): JSX.Element {
     }
   }
 
-  let shortValue = ''
+  let shortValue = ""
   if (props.value) {
-    const parts = props.value.split('/')
+    const parts = props.value.split("/")
     shortValue = parts[parts.length - 1]
   }
 

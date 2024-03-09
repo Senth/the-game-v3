@@ -1,6 +1,6 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from 'next/document'
-import { JSX } from 'react'
-import { ServerStyleSheet } from 'styled-components'
+import Document, { Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps } from "next/document"
+import { JSX } from "react"
+import { ServerStyleSheet } from "styled-components"
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps> {

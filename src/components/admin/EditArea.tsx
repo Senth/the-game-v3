@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState } from "react"
+import styled from "styled-components"
 
 export interface EditProps {
   value?: string
@@ -7,11 +7,11 @@ export interface EditProps {
 }
 
 export default function EditArea(props: EditProps): JSX.Element {
-  const value = props.value || ''
+  const value = props.value || ""
   const [tempValue, setTempValue] = useState(value)
 
   function handleKeyDown(e: React.KeyboardEvent<any>) {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       setTempValue(value)
       e.currentTarget.blur()
     }

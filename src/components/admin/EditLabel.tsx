@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import React from 'react'
-import Edit from './Edit'
+import styled from "styled-components"
+import React from "react"
+import Edit from "./Edit"
 
 export interface EditLabelProps {
   name: string

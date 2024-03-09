@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
+import React, { useState } from "react"
+import styled from "styled-components"
+import { useRouter } from "next/router"
 
 export default function LoginPage(): JSX.Element {
-  const [error, setError] = useState('')
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const handleLogout = async () => {
-    fetch('/api/logout', {
-      method: 'POST',
-      body: '',
+    fetch("/api/logout", {
+      method: "POST",
+      body: "",
     })
       .then((response) => {
         if (response.ok) {
-          router.push('/login')
+          router.push("/login")
         } else {
-          setError('Could not log out')
+          setError("Could not log out")
         }
       })
       .catch(() => {
-        setError('Something went wrong')
+        setError("Something went wrong")
       })
   }
 

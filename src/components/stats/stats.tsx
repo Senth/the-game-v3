@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
-import { Stats } from '@models/stats'
-import { theme } from '@styles/theme'
+import React, { useEffect } from "react"
+import styled from "styled-components"
+import { Stats } from "@models/stats"
+import { theme } from "@styles/theme"
 
 export default function StatsHeader(): JSX.Element {
   const [stats, setStats] = React.useState<Stats>({
@@ -12,19 +12,19 @@ export default function StatsHeader(): JSX.Element {
   })
 
   function updateStats() {
-    fetch('/api/stats')
+    fetch("/api/stats")
       .then((response) => {
         if (response.status === 404) {
           return stats
         }
         if (response.status !== 200) {
-          throw new Error('Failed to fetch stats')
+          throw new Error("Failed to fetch stats")
         }
         return response.json()
       })
       .then((stats) => {
         // Fix dates
-        if (typeof stats.start === 'string') {
+        if (typeof stats.start === "string") {
           stats.start = new Date(stats.start)
           stats.end = new Date(stats.end)
         }
@@ -63,7 +63,7 @@ export default function StatsHeader(): JSX.Element {
             key={team.name}
             left={team.name}
             center={completed}
-            right={team.score.toString() + 'p'}
+            right={team.score.toString() + "p"}
             percentage={percentage.toString()}
           />
         )
@@ -123,7 +123,7 @@ const LineProgress = styled.div<LineProgressProps>`
   position: absolute;
   left: 0;
   top: 0;
-  width: ${(props) => props.percentage || '0'}%;
+  width: ${(props) => props.percentage || "0"}%;
   height: 1.2rem;
   background-color: ${(props) => props.color || props.theme.colors.statusbar.teams};
   z-index: -100;
@@ -165,21 +165,21 @@ function calculateTime(start: Date, end: Date): [string, string, string] {
   const now = new Date()
 
   // Calculate elapsed time formatted as MM:SS
-  let elapsed = '00:00'
+  let elapsed = "00:00"
   if (now > start && now < end) {
     const secondsElapsed = Math.round((now.getTime() - start.getTime()) / 1000)
     const minutes = Math.floor(secondsElapsed / 60)
     const seconds = secondsElapsed % 60
-    elapsed = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    elapsed = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
   }
 
   // Calculate remaining time formatted as MM:SS
-  let remaining = '00:00'
+  let remaining = "00:00"
   if (now < end) {
     const secondsRemaining = Math.round((end.getTime() - now.getTime()) / 1000)
     const minutes = Math.floor(secondsRemaining / 60)
     const seconds = secondsRemaining % 60
-    remaining = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    remaining = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
   }
 
   // Calculate percentage of time elapsed

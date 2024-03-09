@@ -1,12 +1,12 @@
-import React from 'react'
-import AdminPage from '@components/pages/Admin'
-import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
-import { useRouter } from 'next/router'
-import { Quest, QuestTheme, Season } from '@models/quest'
-import EditLabel from '@components/admin/EditLabel'
-import styled from 'styled-components'
-import Edit from '@components/admin/Edit'
-import { Team } from '@models/team'
+import React from "react"
+import AdminPage from "@components/pages/Admin"
+import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
+import { useRouter } from "next/router"
+import { Quest, QuestTheme, Season } from "@models/quest"
+import EditLabel from "@components/admin/EditLabel"
+import styled from "styled-components"
+import Edit from "@components/admin/Edit"
+import { Team } from "@models/team"
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
@@ -15,8 +15,8 @@ export default function SeasonPage(): JSX.Element {
 
   // Find the season
   const { id } = router.query
-  const season = seasons.data?.find((season) => season.id === id) || { title: '', themes: [] }
-  console.log('Season', season)
+  const season = seasons.data?.find((season) => season.id === id) || { title: "", themes: [] }
+  console.log("Season", season)
 
   function onTitleChange(value: string) {
     const newSeason: Season = {
@@ -98,8 +98,8 @@ const Section = styled.div`
 function AddSection(props: { season: Season }): JSX.Element {
   const { season } = props
   const seasonsMutate = useSeasonsMutate()
-  const [themeTitle, setThemeTitle] = React.useState('')
-  const [questTitle, setQuestTitle] = React.useState('')
+  const [themeTitle, setThemeTitle] = React.useState("")
+  const [questTitle, setQuestTitle] = React.useState("")
   const [themeIndex, setThemeIndex] = React.useState(0)
 
   function addTheme(e: React.FormEvent<HTMLFormElement>) {
@@ -108,7 +108,7 @@ function AddSection(props: { season: Season }): JSX.Element {
     season.themes.push({ title: themeTitle, quests: [] })
 
     seasonsMutate.update(season).then(() => {
-      setThemeTitle('')
+      setThemeTitle("")
     })
   }
 
@@ -118,7 +118,7 @@ function AddSection(props: { season: Season }): JSX.Element {
     season.themes[themeIndex].quests.push({ title: questTitle, points: 0, hints: [] })
 
     seasonsMutate.update(season).then(() => {
-      setQuestTitle('')
+      setQuestTitle("")
     })
   }
 
@@ -171,44 +171,44 @@ const MultilineForm = styled.form`
 function AddTeam(props: { season: Season }): JSX.Element {
   const { season } = props
 
-  const [name, setName] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
+  const [name, setName] = React.useState<string>("")
+  const [password, setPassword] = React.useState<string>("")
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
-    console.log('onSubmit')
+    console.log("onSubmit")
     event.preventDefault()
 
     const newTeam: Team = {
       name: name,
       password: password,
-      seasonId: season.id || '',
+      seasonId: season.id || "",
       score: 0,
       questIndex: 0,
       themeIndex: 0,
       hintsRevealed: 0,
     }
 
-    console.log('New team', newTeam)
+    console.log("New team", newTeam)
 
-    const response = fetch('/api/admin/teams', {
-      method: 'POST',
+    const response = fetch("/api/admin/teams", {
+      method: "POST",
       body: JSON.stringify(newTeam),
     })
 
     response
       .then((response) => {
-        console.log('Response', response)
+        console.log("Response", response)
         if (response.ok) {
           // TODO Success message
-          setName('')
-          setPassword('')
+          setName("")
+          setPassword("")
         } else {
-          console.error('Error adding team', response)
+          console.error("Error adding team", response)
           // TODO Error message
         }
       })
       .catch((error) => {
-        console.error('Error adding team', error)
+        console.error("Error adding team", error)
         // TODO Error message
       })
   }

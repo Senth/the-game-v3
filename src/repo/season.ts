@@ -1,5 +1,5 @@
-import fsClient, { Collections } from './firestore'
-import { Season } from '@models/quest'
+import fsClient, { Collections } from "./firestore"
+import { Season } from "@models/quest"
 
 export class SeasonRepo {
   async add(title: string): Promise<Season> {
@@ -20,7 +20,7 @@ export class SeasonRepo {
     const seasonId = season.id
 
     if (!seasonId) {
-      throw new Error('Missing season id')
+      throw new Error("Missing season id")
     }
     delete season.id
 

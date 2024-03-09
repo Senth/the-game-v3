@@ -1,6 +1,6 @@
-import { User } from '@models/user'
-import fsClient from './firestore'
-import { Collections } from './firestore'
+import { User } from "@models/user"
+import fsClient from "./firestore"
+import { Collections } from "./firestore"
 
 export default class UserRepo {
   async getUser(username: string): Promise<User | null> {

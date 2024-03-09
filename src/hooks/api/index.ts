@@ -1,8 +1,8 @@
-import { SWRResponse } from 'swr'
-import { Fetcher } from '@models/api/fetcher'
+import { SWRResponse } from "swr"
+import { Fetcher } from "@models/api/fetcher"
 
 export async function fetcher(url: string, config?: any) {
-  console.log('Fetching')
+  console.log("Fetching")
   let res: any | Response
   if (config) {
     res = await fetch(url, config)
@@ -14,7 +14,7 @@ export async function fetcher(url: string, config?: any) {
     const info = await res.json()
     const status = res.status
 
-    let message = 'An error occurred while fetching the data.'
+    let message = "An error occurred while fetching the data."
     if (info && info.message) {
       message = info.message
     }

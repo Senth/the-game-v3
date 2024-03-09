@@ -1,27 +1,27 @@
-import { withTeam } from '@utils/session'
-import { NextApiRequest, NextApiResponse } from 'next'
-import seasonRepo from '@repo/season'
-import teamRepo from '@repo/team'
-import { Season, Quest, Game } from '@models/quest'
-import { Team, teamHelper } from '@models/team'
-import { AnswerResponse, GamePostRequest } from '@models/api/game'
+import { withTeam } from "@utils/session"
+import { NextApiRequest, NextApiResponse } from "next"
+import seasonRepo from "@repo/season"
+import teamRepo from "@repo/team"
+import { Season, Quest, Game } from "@models/quest"
+import { Team, teamHelper } from "@models/team"
+import { AnswerResponse, GamePostRequest } from "@models/api/game"
 
 export default withTeam(async function handler(req, res) {
   const { method } = req
   switch (method) {
-    case 'GET':
+    case "GET":
       return get(req, res)
-    case 'POST':
+    case "POST":
       return post(req, res)
     default:
-      return res.status(405).json({ message: 'Method not allowed' })
+      return res.status(405).json({ message: "Method not allowed" })
   }
 })
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
   let team = req.session.team
   if (!team) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    return res.status(401).json({ message: "Unauthorized" })
   }
 
   // Get the current team information from the database
@@ -43,10 +43,10 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
   return seasonRepo.get(team.seasonId).then((season) => {
     // Check and make sure the season exists
     if (!season) {
-      return res.status(404).json({ message: 'Season not found' })
+      return res.status(404).json({ message: "Season not found" })
     }
     if (!team) {
-      return res.status(404).json({ message: 'Team not found' })
+      return res.status(404).json({ message: "Team not found" })
     }
 
     const response: Game = {
@@ -137,12 +137,12 @@ function getCurrentQuest(season: Season, team: Team, filter: boolean): Quest | u
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) {
-    return res.status(400).json({ message: 'Missing request body' })
+    return res.status(400).json({ message: "Missing request body" })
   }
 
   let team = req.session.team
   if (!team) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    return res.status(401).json({ message: "Unauthorized" })
   }
 
   // Get the current team information from the database
@@ -154,15 +154,15 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     .then((season) => {
       // Check and make sure the season exists
       if (!season) {
-        return res.status(404).json({ message: 'Season not found' })
+        return res.status(404).json({ message: "Season not found" })
       }
       if (!team) {
-        return res.status(404).json({ message: 'Team not found' })
+        return res.status(404).json({ message: "Team not found" })
       }
 
       const quest = getCurrentQuest(season, team, false)
       if (!quest) {
-        return res.status(404).json({ message: 'Quest not found' })
+        return res.status(404).json({ message: "Quest not found" })
       }
 
       const request = JSON.parse(req.body) as GamePostRequest
@@ -172,12 +172,12 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       } else if (request.revealHint !== undefined && request.revealHint !== null) {
         return revealHint(request, res, team, quest)
       } else {
-        return res.status(400).json({ message: 'Invalid request body' })
+        return res.status(400).json({ message: "Invalid request body" })
       }
     })
     .catch((err) => {
       console.error(err)
-      return res.status(500).json({ message: 'Internal server error' })
+      return res.status(500).json({ message: "Internal server error" })
     })
 }
 
@@ -233,7 +233,7 @@ async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Tea
 async function revealHint(req: GamePostRequest, res: NextApiResponse, team: Team, quest: Quest) {
   // Check if the hint index is valid
   if (req.revealHint === undefined || req.revealHint >= quest.hints.length) {
-    return res.status(400).json({ message: 'Invalid hint index' })
+    return res.status(400).json({ message: "Invalid hint index" })
   }
 
   res.status(200).json({})

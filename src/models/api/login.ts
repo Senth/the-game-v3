@@ -3,6 +3,6 @@ export interface LoginResponse {
 }
 
 export enum LoginTypes {
-  USER = 'user',
-  TEAM = 'team',
+  USER = "user",
+  TEAM = "team",
 }

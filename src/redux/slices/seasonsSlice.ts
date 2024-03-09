@@ -1,7 +1,7 @@
-import { Season } from '@models/quest'
-import { RootState } from '@redux/store'
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { useSelector } from 'react-redux'
+import { Season } from "@models/quest"
+import { RootState } from "@redux/store"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { useSelector } from "react-redux"
 
 export interface SeasonsStore {
   seasons: Season[]
@@ -12,7 +12,7 @@ export const initialState: SeasonsStore = {
 }
 
 export const seasonsSlice = createSlice({
-  name: 'seasons',
+  name: "seasons",
   initialState,
   reducers: {
     setSeasons: (state, action: PayloadAction<Season[]>) => {

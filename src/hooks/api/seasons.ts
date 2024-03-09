@@ -1,11 +1,11 @@
-import { Fetcher } from '@models/api/fetcher'
-import { Season } from '@models/quest'
-import useSWR from 'swr'
-import { returnFetcher, fetcher } from './index'
+import { Fetcher } from "@models/api/fetcher"
+import { Season } from "@models/quest"
+import useSWR from "swr"
+import { returnFetcher, fetcher } from "./index"
 
 export function useSeasons(): Fetcher<Season[]> {
   return returnFetcher(
-    useSWR('/api/admin/seasons', fetcher, {
+    useSWR("/api/admin/seasons", fetcher, {
       revalidateOnFocus: false,
     })
   )
@@ -16,7 +16,7 @@ export function useSeasonsMutate() {
 
   function put(season: Season) {
     fetch(`/api/admin/seasons`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(season),
     })
       .then((response) => {
@@ -44,7 +44,7 @@ const mutateSeason = {
   update(fetcher: Fetcher<Season[]>, season: Season) {
     fetcher.mutate(
       (data: Season[] | undefined) => {
-        console.log('Mutating season')
+        console.log("Mutating season")
         if (!data) {
           return data
         }
@@ -55,7 +55,7 @@ const mutateSeason = {
         }
 
         data[index] = season
-        console.log('Season mutated: ', data[index])
+        console.log("Season mutated: ", data[index])
 
         return data
       },

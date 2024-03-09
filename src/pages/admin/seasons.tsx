@@ -1,10 +1,10 @@
-import React from 'react'
-import AdminPage from '@components/pages/Admin'
-import styled from 'styled-components'
-import { SeasonPostRequest } from '@models/api/season'
-import { useSeasons, useSeasonsMutate } from '@hooks/api/seasons'
-import { useRouter } from 'next/router'
-import { Season } from '@models/quest'
+import React from "react"
+import AdminPage from "@components/pages/Admin"
+import styled from "styled-components"
+import { SeasonPostRequest } from "@models/api/season"
+import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
+import { useRouter } from "next/router"
+import { Season } from "@models/quest"
 
 export default function SeasonsPage(): JSX.Element {
   return (
@@ -46,8 +46,8 @@ function Seasons(): JSX.Element {
                 <td>{season.title}</td>
                 <td>{season.length}</td>
                 <td>{season.start ? season.start.toString() : <StartButton season={season} />}</td>
-                <td>{season.end ? season.end.toString() : ''}</td>
-                <td>{season.start ? <ResetButton season={season} /> : ''}</td>
+                <td>{season.end ? season.end.toString() : ""}</td>
+                <td>{season.start ? <ResetButton season={season} /> : ""}</td>
               </tr>
             ))}
           </tbody>
@@ -69,10 +69,10 @@ function StartButton(prop: { season: Season }): JSX.Element {
 
   function startSeason(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    console.log('start season')
+    console.log("start season")
 
     if (!season.length) {
-      console.log('No length for the season')
+      console.log("No length for the season")
       // TODO Error message
       return
     }
@@ -96,7 +96,7 @@ function ResetButton(prop: { season: Season }): JSX.Element {
 
   function resetSeason(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation()
-    console.log('reset season')
+    console.log("reset season")
 
     // Reset start and end times
     season.start = undefined
@@ -109,7 +109,7 @@ function ResetButton(prop: { season: Season }): JSX.Element {
 }
 
 function NewSeason(): JSX.Element {
-  const [season, setSeason] = React.useState<string>('')
+  const [season, setSeason] = React.useState<string>("")
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -123,15 +123,15 @@ function NewSeason(): JSX.Element {
       title: season,
     }
 
-    const response = await fetch('/api/admin/seasons', {
-      method: 'POST',
+    const response = await fetch("/api/admin/seasons", {
+      method: "POST",
       body: JSON.stringify(body),
     })
     if (response.ok) {
       // TODO add the season to the list
-      setSeason('')
+      setSeason("")
     } else {
-      console.log('error')
+      console.log("error")
       // TODO Error message
     }
   }

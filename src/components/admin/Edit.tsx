@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react"
 
 export interface EditProps {
   value?: string
@@ -7,13 +7,13 @@ export interface EditProps {
 }
 
 export default function Edit(props: EditProps): JSX.Element {
-  const value = props.value || ''
+  const value = props.value || ""
 
   const handleKeyDown = (e: React.KeyboardEvent<any>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault()
       e.currentTarget.blur()
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       e.currentTarget.innerText = value
       e.currentTarget.blur()
     }

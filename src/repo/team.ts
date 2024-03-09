@@ -1,5 +1,5 @@
-import { Team } from '@models/team'
-import fsClient, { Collections } from './firestore'
+import { Team } from "@models/team"
+import fsClient, { Collections } from "./firestore"
 
 export class TeamRepo {
   async add(team: Team): Promise<Team> {
@@ -14,7 +14,7 @@ export class TeamRepo {
     const teamId = team.name
 
     if (!teamId) {
-      throw new Error('Missing team id')
+      throw new Error("Missing team id")
     }
 
     await fsClient.collection(Collections.TEAMS).doc(teamId).set(team)
@@ -32,7 +32,7 @@ export class TeamRepo {
   }
 
   async getTeams(seasonId: string): Promise<Team[] | undefined> {
-    const teamDocs = await fsClient.collection(Collections.TEAMS).where('seasonId', '==', seasonId).get()
+    const teamDocs = await fsClient.collection(Collections.TEAMS).where("seasonId", "==", seasonId).get()
 
     return teamDocs.docs.map((team) => team.data() as Team) as Team[]
   }

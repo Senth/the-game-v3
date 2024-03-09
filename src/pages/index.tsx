@@ -1,13 +1,13 @@
-'use client'
+"use client"
 
-import { Game } from '@models/quest'
-import React, { useEffect, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
-import Parser from 'react-html-parser'
-import { GamePostRequest } from '@models/api/game'
-import Stats from '@components/stats/stats'
-import Hints from '@components/pages/game/hints'
-import Icons from '@components/icons/material'
+import { Game } from "@models/quest"
+import React, { useEffect, useState } from "react"
+import styled, { keyframes } from "styled-components"
+import Parser from "react-html-parser"
+import { GamePostRequest } from "@models/api/game"
+import Stats from "@components/stats/stats"
+import Hints from "@components/pages/game/hints"
+import Icons from "@components/icons/material"
 
 export default function GamePage(): JSX.Element {
   return (
@@ -24,13 +24,13 @@ function GamePrepare(): JSX.Element {
   const now = new Date()
 
   function updateGame() {
-    fetch('/api/game')
+    fetch("/api/game")
       .then((response) => {
         // User not logged in, forward to login page
         if (response.status === 401) {
-          window.location.href = '/login'
+          window.location.href = "/login"
         } else if (response.status !== 200) {
-          throw new Error('Failed to fetch game')
+          throw new Error("Failed to fetch game")
         }
         return response.json()
       })
@@ -131,7 +131,7 @@ function GameSection(props: { game: Game }): JSX.Element {
   const { game } = props
   const quest = game.quest
 
-  let content: any = ''
+  let content: any = ""
   if (quest?.content) {
     content = Parser(quest.content)
   }
@@ -163,7 +163,7 @@ const GameImage = styled.img`
 `
 
 function Answer(): JSX.Element {
-  const [answer, setAnswer] = useState('')
+  const [answer, setAnswer] = useState("")
   const [wrong, setWrong] = useState(false)
   const [correct, setCorrect] = useState(false)
   const [key, setKey] = useState(0)
@@ -176,13 +176,13 @@ function Answer(): JSX.Element {
       answer: answer.trim(),
     }
 
-    fetch('/api/game', {
-      method: 'POST',
+    fetch("/api/game", {
+      method: "POST",
       body: JSON.stringify(request),
     })
       .then((response) => response.json())
       .then((response) => {
-        setAnswer('')
+        setAnswer("")
         setKey((prevKey) => prevKey + 1)
         if (timeoutId) {
           clearTimeout(timeoutId)
@@ -255,7 +255,7 @@ const AnswerCorrect = styled.div`
 
 function GameAsset(props: { asset: string }): JSX.Element {
   const { asset } = props
-  const ext = asset.split('.').pop() || ''
+  const ext = asset.split(".").pop() || ""
 
   if (isImage(ext)) {
     return <GameImage src={asset} />
@@ -267,5 +267,5 @@ function GameAsset(props: { asset: string }): JSX.Element {
 function isImage(ext: string): boolean {
   ext = ext.toLowerCase()
 
-  return ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif'
+  return ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif"
 }

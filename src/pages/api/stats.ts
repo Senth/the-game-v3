@@ -1,18 +1,18 @@
-import { NextApiRequest, NextApiResponse } from 'next'
-import seasonRepo from '@repo/season'
-import teamRepo from '@repo/team'
-import { Season } from '@models/quest'
-import { Team } from '@models/team'
-import { Stats, TeamStat } from '@models/stats'
-import { Status } from '@models/api/status'
+import { NextApiRequest, NextApiResponse } from "next"
+import seasonRepo from "@repo/season"
+import teamRepo from "@repo/team"
+import { Season } from "@models/quest"
+import { Team } from "@models/team"
+import { Stats, TeamStat } from "@models/stats"
+import { Status } from "@models/api/status"
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
   switch (method) {
-    case 'GET':
+    case "GET":
       return get(req, res)
     default:
-      return res.status(405).json({ message: 'Method not allowed' })
+      return res.status(405).json({ message: "Method not allowed" })
   }
 }
 
@@ -35,13 +35,13 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       })
 
       if (!currentSeason || !currentSeason.id) {
-        throw new Status(404, 'Season not found')
+        throw new Status(404, "Season not found")
       }
 
       // Get the teams for this season
       return teamRepo.getTeams(currentSeason.id).then((teams) => {
         if (!teams) {
-          throw new Status(404, 'Teams not found')
+          throw new Status(404, "Teams not found")
         }
         return [currentSeason, teams] as [Season, Team[]]
       })
@@ -71,7 +71,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       if (err instanceof Status) {
         return res.status(200).json({})
       } else {
-        return res.status(500).json({ message: 'Internal Server Error' })
+        return res.status(500).json({ message: "Internal Server Error" })
       }
     })
 }

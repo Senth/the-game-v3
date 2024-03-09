@@ -1,14 +1,14 @@
-import UserRepo from '@repo/user'
-import teamRepo from '@repo/team'
-import { LoginResponse, LoginTypes } from '@models/api/login'
-import { IronSession } from 'iron-session'
-import { withSessionApi } from '@utils/session'
+import UserRepo from "@repo/user"
+import teamRepo from "@repo/team"
+import { LoginResponse, LoginTypes } from "@models/api/login"
+import { IronSession } from "iron-session"
+import { withSessionApi } from "@utils/session"
 
 export default withSessionApi(async function loginRoute(req, res) {
   const { team, password } = JSON.parse(req.body)
 
   if (!team || !password) {
-    return res.status(400).json({ message: 'Missing team or password' })
+    return res.status(400).json({ message: "Missing team or password" })
   }
 
   const userStatus = tryLoginUser(team, password, req.session)
@@ -37,9 +37,9 @@ export default withSessionApi(async function loginRoute(req, res) {
 
   return Promise.all([userStatus, teamStatus]).then(() => {
     if (userStatusCode === 401 && teamStatusCode === 401) {
-      res.status(401).json({ message: 'Invalid username or password' })
+      res.status(401).json({ message: "Invalid username or password" })
     } else if (userStatusCode === 500 || teamStatusCode === 500) {
-      res.status(500).json({ message: 'Internal server error' })
+      res.status(500).json({ message: "Internal server error" })
     }
   })
 })

@@ -1,7 +1,7 @@
-import { GamePostRequest } from '@models/api/game'
-import { Game, Hint as HintModel } from '@models/quest'
-import styled, { keyframes } from 'styled-components'
-import React, { useRef, useState } from 'react'
+import { GamePostRequest } from "@models/api/game"
+import { Game, Hint as HintModel } from "@models/quest"
+import styled, { keyframes } from "styled-components"
+import React, { useRef, useState } from "react"
 
 const REVEAL_TIME = 2000
 
@@ -14,11 +14,7 @@ export default function Hints(props: { game: Game }): JSX.Element {
   return (
     <HintContainer>
       <WorthInfo>Currently worth {points}p</WorthInfo>
-      <HintList>
-        {hints?.map((hint, index) => (
-          <Hint key={hint.text} hint={hint} index={index} />
-        ))}
-      </HintList>
+      <HintList>{hints?.map((hint, index) => <Hint key={hint.text} hint={hint} index={index} />)}</HintList>
     </HintContainer>
   )
 }
@@ -59,8 +55,8 @@ function Hint(props: { hint: HintModel; index: number }): JSX.Element {
       revealHint: index,
     }
 
-    fetch('/api/game', {
-      method: 'POST',
+    fetch("/api/game", {
+      method: "POST",
       body: JSON.stringify(request),
     })
   }
@@ -125,7 +121,7 @@ const HintText = styled.li`
   margin: ${(props) => props.theme.spacing.small} 0;
 
   &::before {
-    content: '📜';
+    content: "📜";
     font-size: ${(props) => props.theme.font.size.normal};
     padding-right: ${(props) => props.theme.spacing.small};
   }

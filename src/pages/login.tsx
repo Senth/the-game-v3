@@ -1,37 +1,37 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
-import { LoginResponse, LoginTypes } from '@models/api/login'
+import React, { useState } from "react"
+import styled from "styled-components"
+import { useRouter } from "next/router"
+import { LoginResponse, LoginTypes } from "@models/api/login"
 
 export default function LoginPage(): JSX.Element {
-  const [team, setTeam] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [team, setTeam] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
   const router = useRouter()
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         body: JSON.stringify({ team, password }),
       })
       if (response.ok) {
         const loginResponse: LoginResponse = await response.json()
         if (loginResponse.type === LoginTypes.USER) {
-          router.push('/admin/seasons')
+          router.push("/admin/seasons")
         } else {
-          router.push('/')
+          router.push("/")
         }
       } else {
-        setError('Invalid username or password')
+        setError("Invalid username or password")
       }
     } catch (error) {
-      setError('An error occurred while logging in')
+      setError("An error occurred while logging in")
     }
   }
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleLogin()
     }
   }
@@ -65,7 +65,7 @@ export default function LoginPage(): JSX.Element {
           <LoginButton onClick={handleLogin}>Login</LoginButton>
           <RegisterButton
             onClick={() => {
-              router.push('/register')
+              router.push("/register")
             }}
           >
             Register

@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { useRouter } from 'next/router'
+import React, { useState } from "react"
+import styled from "styled-components"
+import { useRouter } from "next/router"
 
 export default function RegisterPage(): JSX.Element {
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [name, setName] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
   const router = useRouter()
 
   async function handleRegister() {
     // No empty fields
     if (!name || !password || !confirmPassword) {
-      setError('Please fill out all fields')
+      setError("Please fill out all fields")
       return
     }
 
     // Make sure the passwords match
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
+      setError("Passwords do not match")
       return
     }
 
-    fetch('/api/register', {
-      method: 'POST',
+    fetch("/api/register", {
+      method: "POST",
       body: JSON.stringify({ name, password }),
     })
       .then((response) => {
         if (response.status === 200) {
-          router.push('/login')
+          router.push("/login")
         } else {
           return response.json()
         }
@@ -38,16 +38,16 @@ export default function RegisterPage(): JSX.Element {
         if (data && data.message) {
           setError(data.message)
         } else {
-          setError('Something went wrong')
+          setError("Something went wrong")
         }
       })
       .catch(() => {
-        setError('Something went wrong')
+        setError("Something went wrong")
       })
   }
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleRegister()
     }
   }

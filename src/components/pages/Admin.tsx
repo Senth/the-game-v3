@@ -1,6 +1,6 @@
-import React, { PropsWithChildren } from 'react'
-import styled from 'styled-components'
-import StatsHeader from '@components/stats/stats'
+import React, { PropsWithChildren } from "react"
+import styled from "styled-components"
+import StatsHeader from "@components/stats/stats"
 
 export default function AdminPage(props: PropsWithChildren<{}>): JSX.Element {
   // TODO Make sure user is logged in
