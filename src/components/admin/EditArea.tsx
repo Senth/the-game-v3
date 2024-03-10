@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 
-export interface EditProps {
+export interface TextAreaProps {
   value?: string
   onChange: (value: string) => void
 }
 
-export default function EditArea(props: EditProps): JSX.Element {
+export function TextArea(props: TextAreaProps): JSX.Element {
   const value = props.value || ""
   const [tempValue, setTempValue] = useState(value)
 
@@ -17,12 +17,12 @@ export default function EditArea(props: EditProps): JSX.Element {
     }
   }
 
-  const handleBlur = (e: React.FocusEvent<any>) => {
+  const handleBlur = (_: React.FocusEvent<any>) => {
     props.onChange(tempValue)
   }
 
   return (
-    <TextArea
+    <TextAreaStyled
       onChange={(e) => {
         setTempValue(e.currentTarget.value)
       }}
@@ -33,7 +33,7 @@ export default function EditArea(props: EditProps): JSX.Element {
   )
 }
 
-const TextArea = styled.textarea`
+const TextAreaStyled = styled.textarea`
   width: 100%;
   height: 200px;
 `

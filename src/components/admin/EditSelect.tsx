@@ -1,4 +1,4 @@
-import { Label, Wrapper } from "./EditLabel"
+import { Label, EditWrapper } from "./Edit"
 
 export interface EditSelectProps {
 	name: string
@@ -7,7 +7,7 @@ export interface EditSelectProps {
 	onChange: (value: string) => void
 }
 
-export default function EditSelect(props: EditSelectProps): JSX.Element {
+export function Select(props: EditSelectProps): JSX.Element {
 	const { selected, options, onChange } = props
 
 	const handleBlur = (e: React.FocusEvent<HTMLSelectElement>) => {
@@ -17,15 +17,21 @@ export default function EditSelect(props: EditSelectProps): JSX.Element {
 	}
 
 	return (
-		<Wrapper>
+		<select value={selected} onBlur={handleBlur} onChange={(e) => onChange(e.target.value)}>
+			{options.map((option) => (
+				<option key={option} value={option}>
+					{option}
+				</option>
+			))}
+		</select>
+	)
+}
+
+export function EditSelect(props: EditSelectProps): JSX.Element {
+	return (
+		<EditWrapper>
 			<Label>{props.name}</Label>
-			<select value={selected} onBlur={handleBlur} onChange={(e) => onChange(e.target.value)}>
-				{options.map((option) => (
-					<option key={option} value={option}>
-						{option}
-					</option>
-				))}
-			</select>
-		</Wrapper>
+			<Select {...props} />
+		</EditWrapper>
 	)
 }

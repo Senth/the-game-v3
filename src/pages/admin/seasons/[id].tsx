@@ -3,12 +3,10 @@ import AdminPage from "@components/pages/Admin"
 import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
 import { useRouter } from "next/router"
 import { Order, Quest, QuestId, QuestTheme, Season, newSeason } from "@models/quest"
-import EditLabel from "@components/admin/EditLabel"
 import styled from "styled-components"
-import Edit from "@components/admin/Edit"
 import { Team } from "@models/team"
-import EditSelect from "@components/admin/EditSelect"
-import { randomUUID } from "crypto"
+import { v4 as uuidv4 } from "uuid"
+import { Select, Edit, EditInput, EditLabel, EditSelect, EditWrapper, Label, Input } from "@components/admin"
 
 export default function SeasonPage(): JSX.Element {
   const router = useRouter()
@@ -112,13 +110,18 @@ const Section = styled.div`
 
 function AddSection(props: { season: Season }): JSX.Element {
   const { season } = props
+	const themes = season.themes.map((theme) => theme.title)
+
   const seasonsMutate = useSeasonsMutate()
   const [themeTitle, setThemeTitle] = React.useState("")
   const [questTitle, setQuestTitle] = React.useState("")
-  const [themeIndex, setThemeIndex] = React.useState(0)
+  const [questTheme, setQuestTheme] = React.useState(themes.length > 0 ? themes[0] : "")
 
-  function addTheme(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  function addTheme(e?: React.FormEvent<HTMLFormElement>) {
+		if (e) {
+			e.preventDefault()
+		}
+		console.log("Adding theme", themeTitle)
 
 		const random = season.order === Order.randomAll || season.order === Order.randomTheme
     season.themes.push({ title: themeTitle, quests: [], random: random})
@@ -128,15 +131,24 @@ function AddSection(props: { season: Season }): JSX.Element {
     })
   }
 
-  function addQuest(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  function addQuest(e?: React.FormEvent<HTMLFormElement>) {
+		if (e) {
+			e.preventDefault()
+		}
 
 		const quest: Quest = {
-			id: randomUUID() as QuestId,
+			id: uuidv4() as QuestId,
 			title: questTitle,
 			points: 0,
 			hints: [],
 		}
+
+		const themeIndex = season.themes.findIndex((theme) => theme.title === questTheme)
+		if (themeIndex === -1) {
+			console.error("Theme not found", questTheme)
+			return
+		}
+
     season.themes[themeIndex].quests.push(quest)
 
     seasonsMutate.update(season).then(() => {
@@ -144,47 +156,27 @@ function AddSection(props: { season: Season }): JSX.Element {
     })
   }
 
+
   return (
     <Section>
       <hr />
-      <p>
         <form onSubmit={addTheme}>
-          <Label htmlFor="theme">Theme</Label>
-          <Input type="text" id="theme" value={themeTitle} onChange={(e) => setThemeTitle(e.target.value)} />
+					<EditInput name="Theme" type="text" value={themeTitle} onChange={setThemeTitle} onSubmit={addTheme} />
         </form>
         {season.themes.length > 0 && (
           <>
             <form onSubmit={addQuest}>
-              <Label htmlFor="quest">Quest</Label>
-              <Select value={themeIndex} onChange={(e) => setThemeIndex(Number(e.target.value))}>
-                {season.themes.map((theme: QuestTheme, index: number) => (
-                  <option key={index} value={index}>
-                    {theme.title}
-                  </option>
-                ))}
-              </Select>
-              <Input type="text" id="quest" value={questTitle} onChange={(e) => setQuestTitle(e.target.value)} />
+							<EditWrapper>
+								<Label htmlFor="quest">Quest</Label>
+								<Select name="quest-theme" selected={questTheme} options={themes} onChange={setQuestTheme} />
+								<Input name="quest-name" type="text" value={questTitle} onChange={setQuestTitle} onSubmit={addQuest} />
+							</EditWrapper>
             </form>
           </>
         )}
-      </p>
     </Section>
   )
 }
-
-const Label = styled.label`
-  display: inline-block;
-  width: 125px;
-`
-const Input = styled.input`
-  display: inline-block;
-  margin: ${(props) => props.theme.spacing.small};
-`
-
-const Select = styled.select`
-  display: inline-block;
-  margin: ${(props) => props.theme.spacing.small};
-`
 
 function AddTeam(props: { season: Season }): JSX.Element {
   const { season } = props
@@ -192,9 +184,10 @@ function AddTeam(props: { season: Season }): JSX.Element {
   const [name, setName] = React.useState<string>("")
   const [password, setPassword] = React.useState<string>("")
 
-  function submit(event: React.FormEvent<HTMLFormElement>) {
-    console.log("onSubmit")
-    event.preventDefault()
+  function submit(event?: React.FormEvent<HTMLFormElement>) {
+		if (event) {
+			event.preventDefault()
+		}
 
     const newTeam: Team = {
       name: name,
@@ -233,10 +226,12 @@ function AddTeam(props: { season: Season }): JSX.Element {
 
   return (
     <form onSubmit={submit}>
-      <Label htmlFor="team">New team</Label>
-      <Input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-      <Input type="text" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Input type="submit" value="Add" />
+			<EditWrapper>
+				<Label htmlFor="team">New team</Label>
+				<Input type="text" name="name" placeholder="Name" value={name} onChange={setName} onSubmit={submit} />
+				<Input type="text" name="password" placeholder="Password" value={password} onChange={setPassword} onSubmit={submit} />
+				<button type="button" onClick={() => submit()}>Add</button>
+			</EditWrapper>
     </form>
   )
 }

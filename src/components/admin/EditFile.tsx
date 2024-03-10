@@ -1,5 +1,5 @@
 import React from "react"
-import { Wrapper, Label, Value } from "./EditLabel"
+import { EditWrapper, Label, Value } from "./Edit"
 import styled from "styled-components"
 
 export interface EditFileProps {
@@ -9,7 +9,7 @@ export interface EditFileProps {
   onDelete?: () => void
 }
 
-function EditFile(props: EditFileProps): JSX.Element {
+export function EditFile(props: EditFileProps): JSX.Element {
   const [file, setFile] = React.useState<File | null>(null)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -33,7 +33,7 @@ function EditFile(props: EditFileProps): JSX.Element {
   }
 
   return (
-    <Wrapper>
+    <EditWrapper>
       <Label>{props.name}</Label>
       {props.value ? (
         <Value>
@@ -49,7 +49,7 @@ function EditFile(props: EditFileProps): JSX.Element {
           <button type="submit">Upload</button>
         </form>
       )}
-    </Wrapper>
+    </EditWrapper>
   )
 }
 
@@ -82,5 +82,3 @@ const DeleteButton = styled.button`
   margin-left: ${(props) => props.theme.spacing.normal};
   background-color: ${(props) => props.theme.colors.danger};
 `
-
-export default EditFile

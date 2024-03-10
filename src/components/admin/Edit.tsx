@@ -1,4 +1,5 @@
 import React from "react"
+import styled from "styled-components"
 
 export interface EditProps {
   value?: string
@@ -6,7 +7,7 @@ export interface EditProps {
   onChange: (value: string) => void
 }
 
-export default function Edit(props: EditProps): JSX.Element {
+export function Edit(props: EditProps): JSX.Element {
   const value = props.value || ""
 
   const handleKeyDown = (e: React.KeyboardEvent<any>) => {
@@ -36,3 +37,24 @@ export default function Edit(props: EditProps): JSX.Element {
     </props.element>
   )
 }
+
+export const EditWrapper = styled.div`
+  margin: ${(props) => props.theme.spacing.small} 0;
+  display: flex;
+	gap: ${(props) => props.theme.spacing.small};
+  flex-direction: row;
+`
+
+export const Label = styled.label`
+  display: flex;
+  font-weight: bold;
+  min-width: 150px;
+	min-height: 30px;
+	align-items: center;
+`
+
+export const Value = styled.div`
+  display: block;
+  min-width: 200px;
+  white-space: pre-wrap;
+`
