@@ -4,13 +4,10 @@ import React, { useState } from "react"
 
 import AdminPage from "@components/pages/Admin"
 import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
-import EditLabel from "@components/admin/EditLabel"
-import Edit from "@components/admin/Edit"
-import EditArea from "@components/admin/EditArea"
-import EditFile from "@components/admin/EditFile"
+import { EditLabel, Edit, TextArea, EditFile } from "@components/admin"
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import { Quest, QuestTheme, Season } from "@models/quest"
+import { Quest, QuestTheme, Season, newSeason } from "@models/quest"
 import { AssetResponse } from "@models/api/asset"
 
 export default function QuestPage(): JSX.Element {
@@ -20,8 +17,6 @@ export default function QuestPage(): JSX.Element {
   const { id, themeId, questId } = router.query
   const themeIndex = parseInt(themeId as string)
   const questIndex = parseInt(questId as string)
-  console.log(`Season ${id}, theme ${themeId}, quest ${questId}`)
-  console.log(router.query)
 
   if (seasons.isLoading) {
     return <p>Loading...</p>
@@ -32,7 +27,7 @@ export default function QuestPage(): JSX.Element {
   }
 
   // Find the season
-  const season = seasons.data?.find((season) => season.id === id) || { title: "", themes: [] }
+  const season: Season = seasons.data?.find((season) => season.id === id) || newSeason()
 
   let theme: QuestTheme | undefined
   if (season.themes.length <= themeIndex) {
@@ -155,7 +150,7 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
         }}
       />
       <EditFile name="Asset" value={quest.asset} onSubmit={handleAssetUpload} onDelete={handleDelete} />
-      <EditArea
+      <TextArea
         value={quest.content}
         onChange={(content) => {
           quest.content = content

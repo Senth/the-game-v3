@@ -1,6 +1,5 @@
 import styled from "styled-components"
 import { Label, EditWrapper } from "./Edit"
-import { useState } from "react"
 
 export interface EditInputProps {
 	name: string

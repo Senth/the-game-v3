@@ -26,7 +26,7 @@ export default function SeasonPage(): JSX.Element {
 
   // Find the season
   const { id } = router.query
-  const season: Season = data.find((season) => season.id === id) ||newSeason()
+  const season: Season = data.find((season) => season.id === id) || newSeason()
 
   function onTitleChange(value: string) {
     const newSeason: Season = {
