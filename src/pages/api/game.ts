@@ -2,7 +2,7 @@ import { withTeam } from "@utils/session"
 import { NextApiRequest, NextApiResponse } from "next"
 import seasonRepo from "@repo/season"
 import teamRepo from "@repo/team"
-import { Season, Quest, Game } from "@models/quest"
+import { Season, Quest, Game, Order, QuestTheme } from "@models/quest"
 import { Team, teamHelper } from "@models/team"
 import { AnswerResponse, GamePostRequest } from "@models/api/game"
 
@@ -49,11 +49,21 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
       return res.status(404).json({ message: "Team not found" })
     }
 
+    // Initialize the quest order
+    if (team.questOrder.length === 0) {
+      initializeQuestOrder(season, team)
+      teamRepo.update(team)
+    }
+
     const response: Game = {
       start: season.start,
       end: season.end,
       score: team.score,
-      completed: false,
+      completed: team.completed,
+    }
+
+    if (team.completed) {
+      return res.status(200).json(response)
     }
 
     // Skip getting the current quest
@@ -65,8 +75,6 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
     const quest = getCurrentQuest(season, team, true)
     if (quest) {
       response.quest = quest
-    } else {
-      response.completed = true
     }
 
     return res.status(200).json(response)
@@ -106,14 +114,18 @@ function hasSeasonStarted(season: Season): boolean {
 }
 
 function getCurrentQuest(season: Season, team: Team, filter: boolean): Quest | undefined {
-  // Get the current theme for the team
-  const theme = season.themes[team.themeIndex]
-  if (!theme) {
-    return undefined
-  }
+  const questId = team.questOrder[team.questIndex]
+  // console.log(questId)
 
-  // Get the current quest for the team
-  const quest = theme.quests[team.questIndex]
+  let quest: Quest | undefined
+  for (const theme of season.themes) {
+    for (const q of theme.quests) {
+      if (q.id === questId) {
+        quest = q
+        break
+      }
+    }
+  }
   if (!quest) {
     return undefined
   }
@@ -133,6 +145,26 @@ function getCurrentQuest(season: Season, team: Team, filter: boolean): Quest | u
   }
 
   return quest
+}
+
+function initializeQuestOrder(season: Season, team: Team) {
+  // Randomize the theme order?
+  const themes: QuestTheme[] = [...season.themes]
+  if (season.order === Order.randomAll || season.order === Order.randomTheme) {
+    themes.sort(() => Math.random() - 0.5)
+  }
+
+  // Randomize the quest order?
+  for (let theme of themes) {
+    const quests: Quest[] = [...theme.quests]
+    if (theme.random) {
+      quests.sort(() => Math.random() - 0.5)
+    }
+
+    for (let quest of quests) {
+      team.questOrder.push(quest.id)
+    }
+  }
 }
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
@@ -213,18 +245,12 @@ async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Tea
   team.score = team.score + quest.points - hintPoints
   team.hintsRevealed = 0
 
-  // Get the next quest
-  const theme = season.themes[team.themeIndex]
-  const nextQuest = theme.quests[team.questIndex + 1]
-
-  // Next quest exists in theme, update the index
-  if (nextQuest) {
-    team.questIndex += 1
-  } else {
-    team.themeIndex += 1
+  // Move to the next quest
+  team.questIndex++
+  if (team.questIndex >= team.questOrder.length) {
     team.questIndex = 0
+    team.completed = true
   }
-
   await teamRepo.update(team)
 
   return

@@ -196,6 +196,7 @@ function AddTeam(props: { season: Season }): JSX.Element {
       score: 0,
 			questOrder: [],
       questIndex: 0,
+			completed: false,
       hintsRevealed: 0,
     }
 

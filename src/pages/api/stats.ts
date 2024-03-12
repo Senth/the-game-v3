@@ -60,7 +60,7 @@ async function get(req: NextApiRequest, res: NextApiResponse) {
         const teamStat: TeamStat = {
           name: team.name,
           score: team.score,
-          completed: calculateCompletedQuests(currentSeason, team),
+          completed: calculateCompletedQuests(team),
         }
         stats.teams.push(teamStat)
       }
@@ -86,26 +86,11 @@ function calculateTotalQuests(season: Season): number {
   return total
 }
 
-function calculateCompletedQuests(season: Season, team: Team): number {
-  let completed = 0
+function calculateCompletedQuests(team: Team): number {
+  let completed = team.questIndex
 
-  for (let i = 0; i <= team.themeIndex; i++) {
-    const theme = season.themes[i]
-    if (!theme) {
-      break
-    }
-
-    // Current theme
-    if (i === team.themeIndex) {
-      // Check if the quest index is valid, otherwise it's completed
-      if (team.questIndex <= theme.quests.length) {
-        completed += team.questIndex
-      } else {
-        completed += theme.quests.length
-      }
-    } else {
-      completed += theme.quests.length
-    }
+  if (team.completed) {
+    completed = team.questOrder.length
   }
 
   return completed

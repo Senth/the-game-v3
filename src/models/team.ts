@@ -9,6 +9,7 @@ export interface Team {
   score: number
   questOrder: QuestId[]
   questIndex: number
+  completed: boolean
   hintsRevealed: number
 }
 

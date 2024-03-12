@@ -29,12 +29,6 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 - [ ] When a hint has 0 points, it is treated as non-existent and the team can't reveal it.
 - [ ] First player to complete the game gets a bonus. This depends on the total number of players
-- [ ] Randomize the order of themes and quests per team
-  - [x] Add a button to mark all the quests and themes will be randomized
-  - [x] Instead of having a logic for the next quest, each team's model has the order of the quests
-  - [ ] When completing a quest, go to the next quest in the list
-  - [ ] Randomize the full order when a team is created
-  - [ ] Update the progress bar to show which parts of the game has been completed
 
 ## Done
 
@@ -64,3 +58,9 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
   - [x] When not logged in -> Login page
   - [x] Admin automatically forwarded to admin page
 - [x] Submit button for quests
+- [x] Randomize the order of themes and quests per team
+  - [x] Add a button to mark all the quests and themes will be randomized
+  - [x] Instead of having a logic for the next quest, each team's model has the order of the quests
+  - [x] When completing a quest, go to the next quest in the list
+  - [x] Randomize the full order when a team is created
+  - [x] Update the progress bar to show how many quests have been completed (don't show the order)
