@@ -41,7 +41,7 @@ export function Edit(props: EditProps): JSX.Element {
 export const EditWrapper = styled.div`
   margin: ${(props) => props.theme.spacing.small} 0;
   display: flex;
-	gap: ${(props) => props.theme.spacing.small};
+  gap: ${(props) => props.theme.spacing.small};
   flex-direction: row;
 `
 
@@ -49,8 +49,8 @@ export const Label = styled.label`
   display: flex;
   font-weight: bold;
   min-width: 150px;
-	min-height: 30px;
-	align-items: center;
+  min-height: 30px;
+  align-items: center;
 `
 
 export const Value = styled.div`
