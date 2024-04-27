@@ -1,4 +1,4 @@
-name: GCP Deploy Dev (main)
+name: GCP Deploy Dev
 
 on:
   push:
