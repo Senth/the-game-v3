@@ -4,7 +4,7 @@ import { useSeasons, useSeasonsMutate } from "@hooks/api/seasons"
 import { useRouter } from "next/router"
 import { Order, Quest, QuestId, QuestTheme, Season, newSeason } from "@models/quest"
 import styled from "styled-components"
-import { Team } from "@models/team"
+import { Team, teamHelper } from "@models/team"
 import { v4 as uuidv4 } from "uuid"
 import { Select, Edit, EditInput, EditLabel, EditSelect, EditWrapper, Label, Input } from "@components/admin"
 
@@ -13,16 +13,28 @@ export default function SeasonPage(): JSX.Element {
   const seasons = useSeasons()
   const mutateSeason = useSeasonsMutate()
 
-	if (seasons.isLoading) {
-		return <AdminPage><p>Loading...</p></AdminPage>
-	}
-	if (seasons.error) {
-		return <AdminPage><p>Error</p></AdminPage>
-	}
-	if (!seasons.data) {
-		return <AdminPage><p>No data</p></AdminPage>
-	}
-	const data = seasons.data
+  if (seasons.isLoading) {
+    return (
+      <AdminPage>
+        <p>Loading...</p>
+      </AdminPage>
+    )
+  }
+  if (seasons.error) {
+    return (
+      <AdminPage>
+        <p>Error</p>
+      </AdminPage>
+    )
+  }
+  if (!seasons.data) {
+    return (
+      <AdminPage>
+        <p>No data</p>
+      </AdminPage>
+    )
+  }
+  const data = seasons.data
 
   // Find the season
   const { id } = router.query
@@ -44,22 +56,22 @@ export default function SeasonPage(): JSX.Element {
     mutateSeason.update(newSeason)
   }
 
-	function onOrderChange(value: string) {
-		const newSeason: Season = {
-			...season,
-			order: value as Order,
-		}
-		mutateSeason.update(newSeason)
-	}
+  function onOrderChange(value: string) {
+    const newSeason: Season = {
+      ...season,
+      order: value as Order,
+    }
+    mutateSeason.update(newSeason)
+  }
 
   return (
     <AdminPage>
-			<Edit element="h2" value={season.title} onChange={onTitleChange} />
-			<EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
-			<EditSelect name="Order" selected={season.order} options={Object.values(Order)} onChange={onOrderChange} />
-			<Themes season={season} />
-			<AddSection season={season} />
-			<AddTeam season={season} />
+      <Edit element="h2" value={season.title} onChange={onTitleChange} />
+      <EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
+      <EditSelect name="Order" selected={season.order} options={Object.values(Order)} onChange={onOrderChange} />
+      <Themes season={season} />
+      <AddSection season={season} />
+      <AddTeam season={season} />
     </AdminPage>
   )
 }
@@ -110,7 +122,7 @@ const Section = styled.div`
 
 function AddSection(props: { season: Season }): JSX.Element {
   const { season } = props
-	const themes = season.themes.map((theme) => theme.title)
+  const themes = season.themes.map((theme) => theme.title)
 
   const seasonsMutate = useSeasonsMutate()
   const [themeTitle, setThemeTitle] = React.useState("")
@@ -118,13 +130,13 @@ function AddSection(props: { season: Season }): JSX.Element {
   const [questTheme, setQuestTheme] = React.useState(themes.length > 0 ? themes[0] : "")
 
   function addTheme(e?: React.FormEvent<HTMLFormElement>) {
-		if (e) {
-			e.preventDefault()
-		}
-		console.log("Adding theme", themeTitle)
+    if (e) {
+      e.preventDefault()
+    }
+    console.log("Adding theme", themeTitle)
 
-		const random = season.order === Order.randomAll || season.order === Order.randomTheme
-    season.themes.push({ title: themeTitle, quests: [], random: random})
+    const random = season.order === Order.randomAll || season.order === Order.randomTheme
+    season.themes.push({ title: themeTitle, quests: [], random: random })
 
     seasonsMutate.update(season).then(() => {
       setThemeTitle("")
@@ -132,22 +144,22 @@ function AddSection(props: { season: Season }): JSX.Element {
   }
 
   function addQuest(e?: React.FormEvent<HTMLFormElement>) {
-		if (e) {
-			e.preventDefault()
-		}
+    if (e) {
+      e.preventDefault()
+    }
 
-		const quest: Quest = {
-			id: uuidv4() as QuestId,
-			title: questTitle,
-			points: 0,
-			hints: [],
-		}
+    const quest: Quest = {
+      id: uuidv4() as QuestId,
+      title: questTitle,
+      points: 0,
+      hints: [],
+    }
 
-		const themeIndex = season.themes.findIndex((theme) => theme.title === questTheme)
-		if (themeIndex === -1) {
-			console.error("Theme not found", questTheme)
-			return
-		}
+    const themeIndex = season.themes.findIndex((theme) => theme.title === questTheme)
+    if (themeIndex === -1) {
+      console.error("Theme not found", questTheme)
+      return
+    }
 
     season.themes[themeIndex].quests.push(quest)
 
@@ -156,24 +168,23 @@ function AddSection(props: { season: Season }): JSX.Element {
     })
   }
 
-
   return (
     <Section>
       <hr />
-        <form onSubmit={addTheme}>
-					<EditInput name="Theme" type="text" value={themeTitle} onChange={setThemeTitle} onSubmit={addTheme} />
-        </form>
-        {season.themes.length > 0 && (
-          <>
-            <form onSubmit={addQuest}>
-							<EditWrapper>
-								<Label htmlFor="quest">Quest</Label>
-								<Select name="quest-theme" selected={questTheme} options={themes} onChange={setQuestTheme} />
-								<Input name="quest-name" type="text" value={questTitle} onChange={setQuestTitle} onSubmit={addQuest} />
-							</EditWrapper>
-            </form>
-          </>
-        )}
+      <form onSubmit={addTheme}>
+        <EditInput name="Theme" type="text" value={themeTitle} onChange={setThemeTitle} onSubmit={addTheme} />
+      </form>
+      {season.themes.length > 0 && (
+        <>
+          <form onSubmit={addQuest}>
+            <EditWrapper>
+              <Label htmlFor="quest">Quest</Label>
+              <Select name="quest-theme" selected={questTheme} options={themes} onChange={setQuestTheme} />
+              <Input name="quest-name" type="text" value={questTitle} onChange={setQuestTitle} onSubmit={addQuest} />
+            </EditWrapper>
+          </form>
+        </>
+      )}
     </Section>
   )
 }
@@ -185,22 +196,16 @@ function AddTeam(props: { season: Season }): JSX.Element {
   const [password, setPassword] = React.useState<string>("")
 
   function submit(event?: React.FormEvent<HTMLFormElement>) {
-		if (event) {
-			event.preventDefault()
-		}
+    if (event) {
+      event.preventDefault()
+    }
 
     const newTeam: Team = {
+      ...teamHelper.new(),
       name: name,
       password: password,
       seasonId: season.id || "",
-      score: 0,
-			questOrder: [],
-      questIndex: 0,
-			completed: false,
-      hintsRevealed: 0,
     }
-
-    console.log("New team", newTeam)
 
     const response = fetch("/api/admin/teams", {
       method: "POST",
@@ -227,12 +232,21 @@ function AddTeam(props: { season: Season }): JSX.Element {
 
   return (
     <form onSubmit={submit}>
-			<EditWrapper>
-				<Label htmlFor="team">New team</Label>
-				<Input type="text" name="name" placeholder="Name" value={name} onChange={setName} onSubmit={submit} />
-				<Input type="text" name="password" placeholder="Password" value={password} onChange={setPassword} onSubmit={submit} />
-				<button type="button" onClick={() => submit()}>Add</button>
-			</EditWrapper>
+      <EditWrapper>
+        <Label htmlFor="team">New team</Label>
+        <Input type="text" name="name" placeholder="Name" value={name} onChange={setName} onSubmit={submit} />
+        <Input
+          type="text"
+          name="password"
+          placeholder="Password"
+          value={password}
+          onChange={setPassword}
+          onSubmit={submit}
+        />
+        <button type="button" onClick={() => submit()}>
+          Add
+        </button>
+      </EditWrapper>
     </form>
   )
 }

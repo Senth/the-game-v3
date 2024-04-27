@@ -20,6 +20,18 @@ export interface Guess {
 }
 
 export const teamHelper = {
+  new(): Team {
+    return {
+      name: "",
+      seasonId: "",
+      score: 0,
+      questOrder: [],
+      questIndex: 0,
+      completed: false,
+      hintsRevealed: 0,
+    }
+  },
+
   revealHint(team: Team, hintIndex: number): void {
     team.hintsRevealed |= 1 << hintIndex
   },

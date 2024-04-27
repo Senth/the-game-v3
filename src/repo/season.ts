@@ -1,10 +1,11 @@
 import fsClient, { Collections } from "./firestore"
-import { Season } from "@models/quest"
+import { Order, Season } from "@models/quest"
 
 export class SeasonRepo {
   async add(title: string): Promise<Season> {
     const season: Season = {
       title,
+      order: Order.randomAll,
       themes: [],
     }
 

@@ -1,9 +1,10 @@
-name: GCP Deploy Dev
+name: GCP Deploy Dev (main)
 
 on:
   push:
     branches:
       - main
+  pull_request:
 
 jobs:
   upload:
