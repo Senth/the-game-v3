@@ -1,7 +1,7 @@
 import { withSessionApi } from "@utils/session"
 import teamRepo from "@repo/team"
 import { NextApiRequest, NextApiResponse } from "next"
-import { Team } from "@models/team"
+import { Team, teamHelper } from "@models/team"
 
 export default withSessionApi(async function handler(req, res) {
   const { method } = req
@@ -18,7 +18,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: "Missing request body" })
   }
 
-  const team = JSON.parse(req.body) as Team
+  let team = JSON.parse(req.body) as Team
 
   if (!team.name) {
     return res.status(400).json({ message: "Missing team name" })
@@ -33,12 +33,11 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: "Team name already exists" })
   }
 
-  // Add data to the team
-  team.seasonId = ""
-  team.score = 0
-  team.questIndex = 0
-  team.themeIndex = 0
-  team.hintsRevealed = 0
+  // Add default values
+  team = {
+    ...teamHelper.new(),
+    ...team,
+  }
 
   return teamRepo
     .add(team)
