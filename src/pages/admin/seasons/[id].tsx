@@ -89,6 +89,7 @@ function Themes(props: { season: Season }): JSX.Element {
         <thead>
           <tr>
             <th>Theme</th>
+            <th>Order</th>
             <th>Quest</th>
             <th>Description</th>
           </tr>
@@ -96,18 +97,24 @@ function Themes(props: { season: Season }): JSX.Element {
         <tbody>
           {season.themes.map((theme: QuestTheme, themeIndex: number) => (
             <React.Fragment key={themeIndex}>
-              {theme.quests.map((quest: Quest, questIndex: number) => (
-                <tr
-                  key={questIndex}
-                  onClick={() => {
-                    router.push(`/admin/seasons/${id}/quests/${themeIndex}/${questIndex}`)
-                  }}
-                >
-                  {questIndex === 0 && <td rowSpan={theme.quests.length}>{theme.title}</td>}
-                  <td>{quest.title}</td>
-                  <td>{quest.description && quest.description}</td>
-                </tr>
-              ))}
+              {theme.quests.map((quest: Quest, questIndex: number) => {
+                function gotoQuest() {
+                  router.push(`/admin/seasons/${id}/quests/${themeIndex}/${questIndex}`)
+                }
+
+                return (
+                  <tr key={questIndex}>
+                    {questIndex === 0 && <td rowSpan={theme.quests.length}>{theme.title}</td>}
+                    {questIndex === 0 && (
+                      <td rowSpan={theme.quests.length}>
+                        <SelectThemeOrder season={season} theme={theme} />
+                      </td>
+                    )}
+                    <td onClick={gotoQuest}>{quest.title}</td>
+                    <td onClick={gotoQuest}>{quest.description && quest.description}</td>
+                  </tr>
+                )
+              })}
             </React.Fragment>
           ))}
         </tbody>
@@ -119,6 +126,29 @@ function Themes(props: { season: Season }): JSX.Element {
 const Section = styled.div`
   margin-top: ${(props) => props.theme.spacing.large};
 `
+
+function SelectThemeOrder(props: { season: Season; theme: QuestTheme }): JSX.Element {
+  const { season, theme } = props
+  const [random, setRandom] = React.useState(theme.random)
+  const mutateSeason = useSeasonsMutate()
+
+  function changeOrder(text: string) {
+    const random = text === "Random"
+    const index = season.themes.findIndex((t) => t.title === theme.title)
+    season.themes[index].random = random
+    setRandom(random)
+    mutateSeason.update(season)
+  }
+
+  return (
+    <Select
+      name="Order"
+      selected={random ? "Random" : "Ordered"}
+      options={["Ordered", "Random"]}
+      onChange={changeOrder}
+    />
+  )
+}
 
 function AddSection(props: { season: Season }): JSX.Element {
   const { season } = props
