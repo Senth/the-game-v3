@@ -214,10 +214,22 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function checkAnswer(req: GamePostRequest, res: NextApiResponse, team: Team, season: Season, quest: Quest) {
-  console.log(req, quest.answer)
+  let correctAnswers: string[] = []
+  if (quest.answer?.includes("|")) {
+    correctAnswers = quest.answer.split("|").map((a) => a.trim())
+  } else if (quest.answer) {
+    correctAnswers = [quest.answer]
+  }
 
   // Check if the answer is correct
-  if (req.answer?.toLowerCase() !== quest.answer?.toLowerCase()) {
+  let correct = false
+  for (let answer of correctAnswers) {
+    if (req.answer?.toLowerCase() === answer.toLowerCase()) {
+      correct = true
+      break
+    }
+  }
+  if (!correct) {
     const body: AnswerResponse = { correct: false }
     return res.status(200).json(body)
   }
