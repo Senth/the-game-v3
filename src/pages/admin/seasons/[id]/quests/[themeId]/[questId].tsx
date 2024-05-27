@@ -141,6 +141,14 @@ function QuestEdit(props: { season: Season; quest: Quest }): JSX.Element {
           mutateSeason.update(season)
         }}
       />
+			<EditLabel
+				name="Code Language"
+				value={quest.code}
+				onChange={(code) => {
+					quest.code = code
+					mutateSeason.update(season)
+				}}
+			/>
       <EditLabel
         name="Image URL"
         value={quest.imageUrl}

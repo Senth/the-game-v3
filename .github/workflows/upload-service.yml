@@ -53,12 +53,12 @@ jobs:
       IMAGE_NAME: eu.gcr.io/${{ secrets.GCP_PROJECT_CICD_ID }}/${{ inputs.APP_NAME }}/${{ inputs.tag }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Login
-        uses: google-github-actions/auth@v0
+        uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/${{ secrets.GCP_PROJECT_CICD_NUMBER }}/locations/global/workloadIdentityPools/${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}/providers/github
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}

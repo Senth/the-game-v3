@@ -5,11 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.7.0] - 2024-05-27
 
 ### Added
 
 - Ability to copy a theme into a not started season
+- Code-style quests with syntax highlighting
+
+### Fixed
+
+- chevron_right icon for the submit button showed the text "chevron_right" instead of an icon on first load
 
 ## [0.6.0] - 2024-05-02
 

@@ -8,6 +8,8 @@ import { GamePostRequest } from "@models/api/game"
 import Stats from "@components/stats/stats"
 import Hints from "@components/pages/game/hints"
 import Icons from "@components/icons/material"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { dark, holiTheme, nightOwl } from "react-syntax-highlighter/dist/cjs/styles/prism"
 
 export default function GamePage(): JSX.Element {
   return (
@@ -132,7 +134,11 @@ function GameSection(props: { game: Game }): JSX.Element {
   const quest = game.quest
 
   let content: any = ""
-  if (quest?.content) {
+	if (quest?.code && quest?.content) {
+		content = (
+			<SyntaxHighlighter style={nightOwl} language={quest.code}>{quest.content}</SyntaxHighlighter>
+			)
+  } else if (quest?.content) {
     content = Parser(quest.content)
   }
 
