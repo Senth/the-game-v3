@@ -9,7 +9,7 @@ import Stats from "@components/stats/stats"
 import Hints from "@components/pages/game/hints"
 import Icons from "@components/icons/material"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { dark, holiTheme, nightOwl } from "react-syntax-highlighter/dist/cjs/styles/prism"
+import { nightOwl } from "react-syntax-highlighter/dist/cjs/styles/prism"
 
 export default function GamePage(): JSX.Element {
   return (
