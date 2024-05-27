@@ -31,4 +31,3 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 - When a hint has 0 points, it is treated as non-existent and the team can't reveal it.
 - First team to complete the game gets a bonus. This depends on the total number of players
-- Add code-styling to quests

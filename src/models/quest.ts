@@ -43,6 +43,7 @@ export interface Quest {
   asset?: string
   content?: string
   answer?: string
+	code?: string
   hints: Hint[]
 }
 
