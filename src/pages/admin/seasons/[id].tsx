@@ -69,9 +69,13 @@ export default function SeasonPage(): JSX.Element {
       <Edit element="h2" value={season.title} onChange={onTitleChange} />
       <EditLabel name="Length" value={season.length?.toString()} onChange={onLengthChange} />
       <EditSelect name="Order" selected={season.order} options={Object.values(Order)} onChange={onOrderChange} />
+      <hr />
       <Themes season={season} />
+      <hr />
       <AddSection season={season} />
       <AddTeam season={season} />
+      <hr />
+			<CopyTheme season={season} />
     </AdminPage>
   )
 }
@@ -83,7 +87,6 @@ function Themes(props: { season: Season }): JSX.Element {
 
   return (
     <Section>
-      <hr />
       <h3>Themes</h3>
       <table>
         <thead>
@@ -200,7 +203,6 @@ function AddSection(props: { season: Season }): JSX.Element {
 
   return (
     <Section>
-      <hr />
       <form onSubmit={addTheme}>
         <EditInput name="Theme" type="text" value={themeTitle} onChange={setThemeTitle} onSubmit={addTheme} />
       </form>
@@ -279,4 +281,47 @@ function AddTeam(props: { season: Season }): JSX.Element {
       </EditWrapper>
     </form>
   )
+}
+
+function CopyTheme({season}: {season: Season}): JSX.Element {
+	const [themeTitle, setThemeTitle] = React.useState<string>(season.themes.length > 0 ? season.themes[0].title : "")
+	const seasonsMutate = useSeasonsMutate()
+
+	// Only get seasons that are not started
+	const seasonResp = useSeasons()
+	const seasons = seasonResp.data?.filter((s) => !s.start) || []
+	const [seasonTitle, setSeasonTitle] = React.useState<string>(seasons.length > 0 ? seasons[0].title : "")
+
+	function submit(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault()
+
+		// Figure out the selected season
+		const selectedSeason = seasons.find((s) => s.title === seasonTitle)
+		console.log("Selected season", seasonTitle)
+		if (!selectedSeason) {
+			console.error("Season not found", seasonTitle)
+			return
+		}
+
+		// Find the theme
+		const selectedTheme = season.themes.find((t) => t.title === themeTitle)
+		if (!selectedTheme) {
+			console.error("Theme not found", themeTitle)
+			return
+		}
+
+		// Add the theme to the season
+		selectedSeason.themes.push(selectedTheme)
+		seasonsMutate.update(selectedSeason)
+	}
+	return (
+		<Section>
+			<form onSubmit={submit}>
+			<Label>Copy Theme</Label>
+				<Select name="theme" selected={themeTitle} options={season.themes.map((theme) => theme.title)} onChange={setThemeTitle} />
+				<Select name="season" selected={seasonTitle} options={seasons.map((season) => season.title)} onChange={setSeasonTitle} />
+				<button type="submit">Copy</button>
+			</form>
+		</Section>
+	)
 }
