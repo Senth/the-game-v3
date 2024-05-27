@@ -1,4 +1,4 @@
-ARG VERSION=16-alpine
+ARG VERSION=20-alpine
 
 # Download dependencies
 FROM node:${VERSION} AS deps
