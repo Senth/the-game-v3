@@ -1,15 +1,9 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
-import { IronSession, IronSessionData, SessionOptions, getIronSession } from "iron-session"
+import { SessionOptions, getIronSession } from "iron-session"
 import { Team } from "@models/team"
 import { User } from "@models/user"
 import config from "@config"
-import {
-  GetServerSidePropsContext,
-  GetServerSidePropsResult,
-  NextApiHandler,
-  NextApiRequest,
-  NextApiResponse,
-} from "next"
+import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 
 export const sessionOptions: SessionOptions = {
   cookieName: config.cookieName,
