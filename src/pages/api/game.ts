@@ -1,12 +1,13 @@
-import { withTeam } from "@utils/session"
 import { NextApiRequest, NextApiResponse } from "next"
 import seasonRepo from "@repo/season"
 import teamRepo from "@repo/team"
 import { Season, Quest, Game, Order, QuestTheme } from "@models/quest"
 import { Team, teamHelper } from "@models/team"
 import { AnswerResponse, GamePostRequest } from "@models/api/game"
+import { IronSessionData, sessionOptions, withTeam } from "@utils/session"
+import { getIronSession } from "iron-session"
 
-export default withTeam(async function handler(req, res) {
+export default withTeam(async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req
   switch (method) {
     case "GET":
@@ -19,7 +20,8 @@ export default withTeam(async function handler(req, res) {
 })
 
 async function get(req: NextApiRequest, res: NextApiResponse) {
-  let team = req.session.team
+  const session = await getIronSession<IronSessionData>(req, res, sessionOptions)
+  let team = session.team
   if (!team) {
     return res.status(401).json({ message: "Unauthorized" })
   }
@@ -172,7 +174,8 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     return res.status(400).json({ message: "Missing request body" })
   }
 
-  let team = req.session.team
+  const session = await getIronSession<IronSessionData>(req, res, sessionOptions)
+  let team = session.team
   if (!team) {
     return res.status(401).json({ message: "Unauthorized" })
   }

@@ -1,17 +1,8 @@
-import { withSessionApi } from "@utils/session"
 import teamRepo from "@repo/team"
 import { NextApiRequest, NextApiResponse } from "next"
 import { Team, teamHelper } from "@models/team"
-
-export default withSessionApi(async function handler(req, res) {
-  const { method } = req
-  switch (method) {
-    case "POST":
-      return post(req, res)
-    default:
-      return res.status(405).json({ message: "Method not allowed" })
-  }
-})
+import { getIronSession } from "iron-session"
+import { IronSessionData, sessionOptions } from "@utils/session"
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
   if (!req.body) {
@@ -42,6 +33,13 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
   return teamRepo
     .add(team)
     .then((team) => {
+      return Promise.all([getIronSession<IronSessionData>(req, res, sessionOptions), team])
+    })
+    .then(([session, team]) => {
+      session.team = team
+      return session.save()
+    })
+    .then(() => {
       return res.status(200).json(team)
     })
     .catch((err) => {
@@ -49,3 +47,5 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       return res.status(500).json({ message: "Internal server error" })
     })
 }
+
+export default post
