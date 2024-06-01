@@ -4,6 +4,7 @@ import { theme } from "@styles/theme"
 import { GlobalStyle } from "@styles/global"
 import { Provider } from "react-redux"
 import { store } from "@redux/store"
+import "./_app.css"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

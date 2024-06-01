@@ -10,14 +10,24 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 - Add warning icons to missing fields
 - Ability to remove a hint
 - When looking at a quest, show the hints that have been revealed and by which team.
-- Add a nice overview of the game, what quest they are on (with a link to the quest)
-      And which hints they have revealed.
+- Add a nice overview of the game
+  - The current quest (view), with a link to the quest
+  - The hints, including revealed hints
+  - Points, including minus points for hints
+  - How many they have completed
 - Add/Remove minutes to the end time after it has been started
 - See teams bound to a season and ability to delete them, for testing purposes
+- Default settings for a quest: Points
 
 ### UI/UX
 
 - Use Tailwind CSS instead of styled components
+  - Add a theme
+  - Fix tailwindcss for Game layout
+  - Admin
+    - Seasons
+    - Quests
+    - Quest
 
 ### Chat
 
@@ -29,5 +39,4 @@ A simple list of things to do, and to help me keep track of what I'm doing and g
 
 ### Game
 
-- When a hint has 0 points, it is treated as non-existent and the team can't reveal it.
 - First team to complete the game gets a bonus. This depends on the total number of players

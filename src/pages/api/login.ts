@@ -1,18 +1,21 @@
 import UserRepo from "@repo/user"
 import teamRepo from "@repo/team"
 import { LoginResponse, LoginTypes } from "@models/api/login"
-import { IronSession } from "iron-session"
-import { withSessionApi } from "@utils/session"
+import { IronSession, getIronSession } from "iron-session"
+import { IronSessionData, sessionOptions } from "@utils/session"
+import { NextApiRequest, NextApiResponse } from "next"
 
-export default withSessionApi(async function loginRoute(req, res) {
+export async function post(req: NextApiRequest, res: NextApiResponse) {
   const { team, password } = JSON.parse(req.body)
 
   if (!team || !password) {
     return res.status(400).json({ message: "Missing team or password" })
   }
+  const session = await getIronSession<IronSessionData>(req, res, sessionOptions)
+  console.log(session)
 
-  const userStatus = tryLoginUser(team, password, req.session)
-  const teamStatus = tryLoginTeam(team, password, req.session)
+  const userStatus = tryLoginUser(team, password, session)
+  const teamStatus = tryLoginTeam(team, password, session)
 
   let userStatusCode = 0
   let teamStatusCode = 0
@@ -42,9 +45,14 @@ export default withSessionApi(async function loginRoute(req, res) {
       res.status(500).json({ message: "Internal server error" })
     }
   })
-})
+}
+export default post
 
-async function tryLoginUser(username: string, password: string, session: IronSession): Promise<number> {
+async function tryLoginUser(
+  username: string,
+  password: string,
+  session: IronSession<IronSessionData>
+): Promise<number> {
   try {
     const userRepo = new UserRepo()
     const user = await userRepo.getUser(username)
@@ -73,7 +81,11 @@ async function tryLoginUser(username: string, password: string, session: IronSes
   }
 }
 
-async function tryLoginTeam(teamName: string, password: string, session: IronSession): Promise<number> {
+async function tryLoginTeam(
+  teamName: string,
+  password: string,
+  session: IronSession<IronSessionData>
+): Promise<number> {
   try {
     const team = await teamRepo.getTeam(teamName)
 

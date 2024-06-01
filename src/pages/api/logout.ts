@@ -1,24 +1,21 @@
-import { IronSession } from "iron-session"
-import { withSessionApi } from "@utils/session"
+import { IronSessionData, sessionOptions } from "@utils/session"
+import { getIronSession } from "iron-session"
+import { NextApiRequest, NextApiResponse } from "next"
 
-export default withSessionApi(async function loginRoute(req, res) {
-  tryLogoutUser(req.session).then((status) => {
-    if (status === 200) {
-      res.status(200).json({ message: "Logged out" })
-    } else {
-      res.status(status).json({ message: "Internal server error" })
-    }
-  })
-})
-
-async function tryLogoutUser(session: IronSession): Promise<number> {
-  try {
-    delete session.user
-    delete session.team
-    await session.save()
-    return 200
-  } catch (error) {
-    console.error(error)
-    return 500
-  }
+export async function post(req: NextApiRequest, res: NextApiResponse) {
+  return getIronSession<IronSessionData>(req, res, sessionOptions)
+    .then((session) => {
+      delete session.user
+      delete session.team
+      return session.save()
+    })
+    .then(() => {
+      return res.status(200).json({ message: "Logged out" })
+    })
+    .catch((error) => {
+      console.error(error)
+      return res.status(500).json({ message: "Internal server error" })
+    })
 }
+
+export default post

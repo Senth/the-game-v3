@@ -9,7 +9,7 @@ export default function AdminPage(props: PropsWithChildren<{}>): JSX.Element {
     <>
       <StatsHeader />
       <AdminWrapper>
-        <h1>Admin</h1>
+        <h1 className="font-bold">Admin</h1>
         <AdminContent>{props.children}</AdminContent>
       </AdminWrapper>
     </>
