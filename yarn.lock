@@ -2251,10 +2251,10 @@ internal-slot@^1.0.7:
     hasown "^2.0.0"
     side-channel "^1.0.4"
 
-iron-session@8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/iron-session/-/iron-session-8.0.2.tgz#9802e080206a8ba41911b53d29ff7de11161d036"
-  integrity sha512-p4Yf1moQr6gnCcXu5vCaxVKRKDmR9PZcQDfp7ZOgbsSHUsgaNti6OgDB2BdgxC2aS6V/6Hu4O0wYlj92sbdIJg==
+iron-session@8.0.3:
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/iron-session/-/iron-session-8.0.3.tgz#e3b7d9efdd650d3bfd15881c4cbb34a0089f9651"
+  integrity sha512-WtDX0griBliMoR6hGoU3SlefW+VSbfHrIVqURQ0Nbg/Pd+nj7VDsKV+sx0FHjyUCaO02YoYV5v+kW0PqvFJISQ==
   dependencies:
     cookie "0.6.0"
     iron-webcrypto "1.2.1"
