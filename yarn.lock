@@ -1160,10 +1160,15 @@ concat-stream@^1.5.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-cookie@0.6.0, cookie@^0.6.0:
+cookie@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.6.0.tgz#2798b04b071b0ecbff0dbb62a505a8efa4e19051"
   integrity sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==
+
+cookie@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
+  integrity sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==
 
 core-util-is@~1.0.0:
   version "1.0.3"
@@ -2251,16 +2256,16 @@ internal-slot@^1.0.7:
     hasown "^2.0.0"
     side-channel "^1.0.4"
 
-iron-session@8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/iron-session/-/iron-session-8.0.3.tgz#e3b7d9efdd650d3bfd15881c4cbb34a0089f9651"
-  integrity sha512-WtDX0griBliMoR6hGoU3SlefW+VSbfHrIVqURQ0Nbg/Pd+nj7VDsKV+sx0FHjyUCaO02YoYV5v+kW0PqvFJISQ==
+iron-session@8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/iron-session/-/iron-session-8.0.4.tgz#03ae73f9bb25b45c8a8506eccb7097837c3d9fed"
+  integrity sha512-9ivNnaKOd08osD0lJ3i6If23GFS2LsxyMU8Gf/uBUEgm8/8CC1hrrCHFDpMo3IFbpBgwoo/eairRsaD3c5itxA==
   dependencies:
-    cookie "0.6.0"
-    iron-webcrypto "1.2.1"
-    uncrypto "0.1.3"
+    cookie "^0.7.2"
+    iron-webcrypto "^1.2.1"
+    uncrypto "^0.1.3"
 
-iron-webcrypto@1.2.1:
+iron-webcrypto@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/iron-webcrypto/-/iron-webcrypto-1.2.1.tgz#aa60ff2aa10550630f4c0b11fd2442becdb35a6f"
   integrity sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg==
@@ -3896,7 +3901,7 @@ unbox-primitive@^1.0.2:
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
 
-uncrypto@0.1.3:
+uncrypto@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/uncrypto/-/uncrypto-0.1.3.tgz#e1288d609226f2d02d8d69ee861fa20d8348ef2b"
   integrity sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==
